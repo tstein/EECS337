@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 
 units = [l for l in open("vocab/units.txt").read().split("\n") if l]
 

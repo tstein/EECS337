@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 """ Contains the Recipe data structure and functions for creating and
 manipulating them. """
 

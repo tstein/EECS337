@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 """ Main entry point for the project. """
 
 from sys import stdin, stdout

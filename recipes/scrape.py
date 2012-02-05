@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 """ Contains functions for scraping allrecipes.com. """
 
 import re
