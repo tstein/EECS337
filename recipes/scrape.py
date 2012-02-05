@@ -5,7 +5,7 @@ import re
 from urllib2 import urlopen
 
 from BeautifulSoup import BeautifulSoup
-from recipe import Recipe
+from recipe import Recipe, understandDirections, understandIngredients
 
 
 SEARCH_URL = "http://allrecipes.com/Search/Recipes.aspx?WithTerm=%s"
@@ -37,9 +37,11 @@ def scrapeRecipe(title):
     recipe.cooktime = _parseTime(details, 'Cook')
     recipe.totaltime = _parseTime(details, 'Ready')
     # Get ingredients.
-    recipe.ingredients = _parseIngredients(details.find('div', 'ingredients'))
+    ingredient_strings = _parseIngredients(details.find('div', 'ingredients'))
+    recipe.ingredients = understandIngredients(ingredient_strings)
     # Get steps.
-    recipe.directions = _parseDirections(details.find('div', 'directions'))
+    direction_strings = _parseDirections(details.find('div', 'directions'))
+    recipe.directions = understandDirections(direction_strings)
     return recipe
 
 
