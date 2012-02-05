@@ -8,6 +8,10 @@ drop
 drops
 envelope
 envelopes
+gallon
+gallons
+link
+links
 ounce
 ounces
 oz
@@ -19,6 +23,8 @@ pinch
 pinches
 pound
 pounds
+quart
+quarts
 slice
 slices
 tablespoon
