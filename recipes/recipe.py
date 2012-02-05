@@ -20,6 +20,7 @@ class Recipe(object):
         self.directions = []
 
     def prettify(self):
+        """ Stringify a recipe for human consumption. """
         prettified = self.title + ":\n"
         if self.preptime is not None:
             prettified += "Prep: %s    Cook: %s    Total: %s\n" % \
@@ -35,6 +36,7 @@ class Recipe(object):
 
 
 def _prettifyIngredient(name, (quantity, unit, modifiers)):
+    """ Stringify an ingredient for human consumption. """
     if quantity is not None:
         if unit is not None:
             return "%s: %.2f %s" % (name, quantity, unit)
@@ -55,6 +57,8 @@ def understandIngredients(ingredients):
 
 
 def _understandIngredient(ingredient):
+    """ Take a string describing one ingredient and return a tuple of (name,
+    quantity, unit, modifiers). """
     re_numeric = re.compile("(\d+/\d+|\d+(?:\,\d+)?)")
     if re_numeric.match(ingredient):
         quantity = re_numeric.match(ingredient).group(0)
@@ -85,6 +89,11 @@ def _understandIngredient(ingredient):
 
 
 def _understandQuantity(quantity):
+    """ Turn quantity strings into numbers. Handles:
+        "1"     -> 1
+        "1/2"   -> .5
+        "1 1/2" -> 1.5
+    """
     ret = 0
     parts = quantity.split(" ")
     frac = parts[-1].split("/")
