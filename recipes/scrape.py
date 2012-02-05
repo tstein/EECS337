@@ -17,7 +17,7 @@ def scrapeSearch(query):
     e.g., [("Frog Cupcakes", "frog-cupcakes")]
     """
     entity = urlopen(SEARCH_URL % (query.replace(" ", "%20"))).read()
-    soup = BeautifulSoup(entity)
+    soup = BeautifulSoup(entity, convertEntities=BeautifulSoup.HTML_ENTITIES)
     links = soup.findAll('a', id=re.compile('.*lnkRecipeTitle'))
     return [_parseSearcha(a) for a in links]
 
@@ -62,7 +62,8 @@ def _parseTime(details, name):
 
 def _parseIngredients(div):
     """ Parse a list of strings out of the div.ingredients. """
-    return [li.text for li in div.findAll('li', 'ingredient')]
+    return [li.text for li in div.findAll('li', 'ingredient') if li.text !=
+            "&nbsp;"]
 
 def _parseDirections(div):
     """ Parse a list of strings out of the div.directions. """
