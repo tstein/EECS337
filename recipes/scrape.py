@@ -62,8 +62,8 @@ def _parseTime(details, name):
 
 def _parseIngredients(div):
     """ Parse a list of strings out of the div.ingredients. """
-    return [li.text for li in div.findAll('li', 'ingredient') if li.text !=
-            "&nbsp;"]
+    return [li.text.replace("&#174;", "") for li in div.findAll('li',
+        'ingredient') if li.text != "&nbsp;"]
 
 def _parseDirections(div):
     """ Parse a list of strings out of the div.directions. """
