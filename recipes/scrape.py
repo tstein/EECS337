@@ -16,7 +16,7 @@ def scrapeSearch(query):
     """ Search for query and return a list of 2-tuples of (pretty-name, title).
     e.g., [("Frog Cupcakes", "frog-cupcakes")]
     """
-    entity = urlopen(SEARCH_URL % query).read()
+    entity = urlopen(SEARCH_URL % (query.replace(" ", "%20"))).read()
     soup = BeautifulSoup(entity)
     links = soup.findAll('a', id=re.compile('.*lnkRecipeTitle'))
     return [_parseSearcha(a) for a in links]
@@ -53,6 +53,8 @@ def _parseSearcha(a):
 def _parseTime(details, name):
     """ Parse {prep, cook, total} time out of the details div. """
     h5 = details.find('h5', id=re.compile('.*h5' + name))
+    if h5 is None:
+        return None
     spans = h5.findAll('span')
     return spans[-1].text
 
