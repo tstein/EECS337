@@ -11,12 +11,18 @@ class Recipe(object):
         self.cooktime = 0
         self.totaltime = 0
         self.yields = ""
-        self.ingredients = dict() # ingredient -> quantity
-        self.steps = [] # We may need a more complex representation.
+        self.ingredients = []
+        self.directions = []
 
     def prettify(self):
         prettified = self.title + ":\n"
         prettified += "Prep: %s    Cook: %s    Total: %s\n" % (self.preptime,
                 self.cooktime, self.totaltime)
+        prettified += "Ingredients:\n"
+        for ingredient in self.ingredients:
+            prettified += "  " + ingredient + "\n"
+        prettified += "Directions:\n"
+        for direction in self.directions:
+            prettified += "  " + direction + "\n"
         return prettified
 

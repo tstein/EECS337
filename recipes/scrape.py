@@ -37,9 +37,9 @@ def scrapeRecipe(title):
     recipe.cooktime = _parseTime(details, 'Cook')
     recipe.totaltime = _parseTime(details, 'Ready')
     # Get ingredients.
-    pass
+    recipe.ingredients = _parseIngredients(details.find('div', 'ingredients'))
     # Get steps.
-    pass
+    recipe.directions = _parseDirections(details.find('div', 'directions'))
     return recipe
 
 
@@ -55,4 +55,12 @@ def _parseTime(details, name):
     h5 = details.find('h5', id=re.compile('.*h5' + name))
     spans = h5.findAll('span')
     return spans[-1].text
+
+def _parseIngredients(div):
+    """ Parse a list of strings out of the div.ingredients. """
+    return [li.text for li in div.findAll('li', 'ingredient')]
+
+def _parseDirections(div):
+    """ Parse a list of strings out of the div.directions. """
+    return [span.text for span in div.findAll('span', 'break')]
 
