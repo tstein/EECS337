@@ -2,6 +2,8 @@ can
 cans
 clove
 cloves
+container
+containers
 cup
 cups
 drop
@@ -12,6 +14,8 @@ fillet
 fillets
 gallon
 gallons
+head
+heads
 link
 links
 ounce
@@ -27,9 +31,17 @@ pound
 pounds
 quart
 quarts
+scoop
+scoops
 slice
 slices
+square
+squares
+stalk
+stalks
 tablespoon
 tablespoons
 teaspoon
 teaspoons
+wedge
+wedges

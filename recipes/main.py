@@ -3,13 +3,28 @@
 
 from sys import stdin, stdout
 
+import nltk
+
 from scrape import scrapeRecipe, scrapeSearch
+
 
 def trim(text):
     return text.lstrip(' \t\n').rstrip(' \t\n')
 
 
+def loadNltk():
+    """ Attempt to use the nltk. If it fails, download the corpora. """
+    try:
+        text = nltk.word_tokenize("There are four types of internal \
+            combustion engine.")
+        nltk.pos_tag(text)
+    except LookupError:
+        stdout.write("nltk data not present. Downloading.\n")
+        nltk.download("book")
+
+
 while (True):
+    loadNltk()
     stdout.write("Enter a search query: ")
     query = trim(stdin.readline())
     if not query:
