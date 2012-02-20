@@ -30,7 +30,6 @@ class Recipe(object):
             prettified += "  " + _prettifyIngredient(ingredient,
                     self.ingredients[ingredient]) + "\n"
         prettified += "Directions:\n"
-        self.directions = splitDirections(self.directions)
         for direction in self.directions:
             prettified += "  " + direction + "\n"
         return prettified
@@ -106,19 +105,17 @@ def _understandQuantity(quantity):
         ret = int(parts[0])
     return ret
 
+
 def splitDirections(directions):
     newdirections = []
     for direction in directions:
-        for direc in direction.split('.'):
+        for direc in re.split('(?:\.\s+(?=[A-Z]))|(?:;\s+)', direction):
             if len(direc) > 0:
-                newdirections.append( direc.lstrip() )
-    
+                direc = direc.lower().rstrip('.')
+                newdirections.append(direc.lstrip())
     return newdirections
-    
-    
-    
+
 
 def understandDirections(directions):
-    return directions
-
+    return splitDirections(directions)
 
