@@ -19,20 +19,23 @@ while (True):
     stdout.flush()
     results = scrapeSearch(query) 
     stdout.write(" Done!\n")
-    stdout.write("Results:\n")
-    for (i, result) in enumerate(results):
-        stdout.write(" %d: %s\n" % (i, result[0]))
-        if i >= 9: break
+    if not results:
+        stdout.write("You can't eat that!\n")
+    else:
+        stdout.write("Results:\n")
+        for (i, result) in enumerate(results):
+            stdout.write(" %d: %s\n" % (i, result[0]))
+            if i >= 9: break
 
-    choice = -1
-    while choice < 0 or choice > min(len(results) - 1, 9):
-        stdout.write("Enter the number of a recipe: ")
-        choice = int(trim(stdin.readline()))
-    stdout.write("Scraping...")
-    stdout.flush()
-    recipe = scrapeRecipe(results[choice][1])
-    stdout.write(" Done!\n")
-    stdout.write("This is what we parsed:\n\n")
-    stdout.write(recipe.prettify())
-    stdout.write("\n")
+        choice = -1
+        while choice < 0 or choice > min(len(results) - 1, 9):
+            stdout.write("Enter the number of a recipe: ")
+            choice = int(trim(stdin.readline()))
+        stdout.write("Scraping...")
+        stdout.flush()
+        recipe = scrapeRecipe(results[choice][1])
+        stdout.write(" Done!\n")
+        stdout.write("This is what we parsed:\n\n")
+        stdout.write(recipe.prettify())
+        stdout.write("\n")
 
