@@ -3,12 +3,12 @@ beans:vegetable:
 beef:meat:
 catfish:meat:
 celery:vegetable:
-cheese:dairy:American
+cheese:dairy:
 chicken:meat:
 chocolate:sweets
 coconut:fruit:
 cod:meat:
-crab:meat:American
+crab:meat:
 dough:starch
 duck:meat:
 flour:starch:
@@ -17,7 +17,7 @@ haddock:meat:
 halibut:meat:
 horseradish:spice:
 lamb:meat:
-lobster:meat:American
+lobster:meat:
 onion:vegetable:
 oregano:spice:
 pork:meat:
@@ -28,6 +28,30 @@ shrimp:meat:
 sprouts:vegetable:Asian
 thyme:spice:
 tilapia:meat:
+lamb:protein:Indian
+naan:starch:Indian
+curry:spice:Indian
+cumin:spice:Indian
+coriander:spice:Indian
+tumeric:spice:Indian
+tofu:protein:Asian
+rice:starch:Asian
+ginger:spice:Asian
+soy sauce:spice:Asian
+bok choy:vegetable:Asian
+steak:protein:American
+potatoes:starch:American
+bacon:vegetable:American
+barbeque sauce:spice:American
+beans:protein:Mexican
+maize:vegetable:Mexican
+tortillas:starch:Mexican
+jalepenos:spice:Mexican
+artichoke:vegetable:Italian
+fettucini:starch:Italian
+thyme:spice:Italian
+oregano:spice:Italian    
+
 tofu:meat:Asian
 tuna:meat:
 turkey:meat:American
