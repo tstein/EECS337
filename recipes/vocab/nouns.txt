@@ -54,3 +54,6 @@ tumeric:spice:Indian
 tuna:meat:
 turkey:meat:American
 yogurt:dairy:
+lettuce:vegetable:
+cucumber:vegetable:
+
