@@ -4,4 +4,6 @@ ground
 medium
 plain
 skinless
+cooked
+whole
 spicy

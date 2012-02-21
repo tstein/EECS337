@@ -30,10 +30,25 @@ class Recipe(object):
         if self.preptime is not None:
             prettified += "Prep: %s    Cook: %s    Total: %s\n" % \
                 (self.preptime, self.cooktime, self.totaltime)
-        prettified += "Ingredients:\n"
+        # Make reverse category mappings.
+        categories = dict()
         for ingredient in self.ingredients:
-            prettified += "  " + _prettifyIngredient(ingredient,
-                    self.ingredients[ingredient]) + "\n"
+            known_ingredient = _fuzzyfind(ingredient, nouns.keys())
+            if known_ingredient is not None:
+                category = nouns[known_ingredient][0]
+                if not category:
+                    category = "misc"
+            else:
+                category = "misc"
+            if category not in categories:
+                categories[category] = []
+            categories[category].append(ingredient)
+        prettified += "Ingredients:\n"
+        for category in _sortCategories(categories.keys()):
+            prettified += "  " + category + ":\n"
+            for ingredient in categories[category]:
+                prettified += "    " + _prettifyIngredient(ingredient,
+                        self.ingredients[ingredient]) + "\n"
         prettified += "Directions:\n"
         for direction in self.directions:
             prettified += "  " + direction + "\n"
@@ -206,4 +221,31 @@ def _understandDirection(direction, ingredients):
         tokens = tokens[1:]
     action = action.lstrip()
     return direction
+
+
+def _fuzzyfind(query, values):
+    """ Find... fuzzily. """
+    if query in values:
+        return query
+    for token in reversed(query.split(" ")):
+        if token in values:
+            return token
+        for v in values:
+            if abs(len(v) - len(token)) <= 2 and \
+                    v.startswith(token) or token.startswith(v):
+                return v
+    return None
+
+def _sortCategories(categories):
+    prependees = ['meat', 'starch', 'dairy', 'fruit', 'vegetable']
+    appendees = ['seasonings', 'misc']
+    for p in reversed(prependees):
+        if p in categories:
+            categories.remove(p)
+            categories.insert(0, p)
+    for p in appendees:
+        if p in categories:
+            categories.remove(p)
+            categories.append(p)
+    return categories
 

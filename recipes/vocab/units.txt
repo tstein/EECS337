@@ -1,4 +1,6 @@
 can
+pint
+pints
 cans
 clove
 cloves
@@ -16,6 +18,8 @@ gallon
 gallons
 head
 heads
+jar
+jars
 link
 links
 ounce
