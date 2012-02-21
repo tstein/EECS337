@@ -1,9 +1,9 @@
 boneless
 cold
+cooked
 ground
 medium
 plain
 skinless
-cooked
-whole
 spicy
+whole

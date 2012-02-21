@@ -1,8 +1,11 @@
 apple:fruit:
 artichoke:vegetable:Italian
 bacon:vegetable:American
+bagel:starch
 barbeque sauce:seasoning:American
 basil:seasoning
+bay leaf:seasoning
+bay leaves:seasoning
 beans:meat:Mexican
 beef:meat:
 blueberries:fruit
@@ -12,6 +15,7 @@ bread:starch:
 broccoli:vegetable
 butter:dairy
 cantaloupe:fruit
+carrot:vegetable
 catfish:meat:
 celery:vegetable:
 cheese:dairy:
@@ -62,20 +66,26 @@ oregano:seasoning:Italian
 parsley:seasoning
 pasta:starch
 peach:fruit
+pea:vegetable
 pepper:vegetable:
 pineapple:fruit
 pork:meat:
 potatoes:starch:American
 raisin:fruit:
 rice:starch:Asian
+rosemary:seasoning
 salad:vegetable:
 salmon:meat:
+salt and black pepper:seasoning
+salt and ground black pepper:seasoning
+salt and pepper:seasoning
 salt:seasoning
 sauce:seasoning
 sausage:meat:
 scallop:meat:
 seasoning:seasoning
 shrimp:meat:
+snail:meat
 soy sauce:seasoning:Asian
 sprouts:vegetable:Asian
 steak:meat:American
@@ -86,7 +96,6 @@ thyme:seasoning:Italian
 tilapia:meat:
 tofu:meat:Asian
 tomato:vegetable
-rosemary:seasoning
 tortillas:starch:Mexican
 tuna:meat:
 turkey:meat:American
@@ -94,10 +103,3 @@ turmeric:seasoning:Indian
 vinegar:seasoning
 wine:booze
 yogurt:dairy:
-bay leaves:seasoning
-bay leaf:seasoning
-carrot:vegetable
-pea:vegetable
-salt and pepper:seasoning
-salt and ground black pepper:seasoning
-salt and black pepper:seasoning

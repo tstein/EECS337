@@ -67,7 +67,16 @@ class Recipe(object):
         if new is not None:
             self.ingredients[new[0]] = (new[1], new[2], new[3])
         self.makeCategories()
-
+        newname = new[0]
+        for i, direction in enumerate(self.directions):
+            oldname = old
+            if direction.find(oldname) >= 0:
+                self.directions[i] = direction.replace(oldname, newname)
+                continue
+            found = fuzzyfind(oldname, nltk.word_tokenize(direction))
+            if found is not None:
+                oldname = found
+                self.directions[i] = direction.replace(oldname, newname)
 
 
 def _prettifyIngredient(name, (quantity, unit, modifiers)):
@@ -251,7 +260,9 @@ def fuzzyfind(query, values):
                 return v
     return None
 
+
 def _sortCategories(categories):
+    """ Force some sort of order on the categories. """
     prependees = ['meat', 'starch', 'dairy', 'fruit', 'vegetable']
     appendees = ['seasonings', 'misc']
     for p in reversed(prependees):

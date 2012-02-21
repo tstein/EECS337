@@ -1,6 +1,4 @@
 can
-pint
-pints
 cans
 clove
 cloves
@@ -20,6 +18,8 @@ head
 heads
 jar
 jars
+leaf
+leaves
 link
 links
 ounce
@@ -31,6 +31,8 @@ piece
 pieces
 pinch
 pinches
+pint
+pints
 pound
 pounds
 quart
