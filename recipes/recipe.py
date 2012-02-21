@@ -62,6 +62,8 @@ def understandIngredients(ingredients):
     (quantity, unit, modifiers) tuples. """
     ret = dict()
     for i in ingredients:
+        if i == i.upper():
+            continue
         parsed = _understandIngredient(i)
         ret[parsed[0]] = (parsed[1], parsed[2], parsed[3])
     return ret
