@@ -8,10 +8,15 @@ noun_lines = [l for l in open("vocab/nouns.txt").read().split("\n")
 for line in noun_lines:
     parts = line.split(":")
     noun = parts[0]
-    if len(parts) > 1:
-        nouns[noun] = parts[1].split(",")
-    else:
-        nouns[noun] = []
+    try:
+        category = parts[1]
+    except IndexError:
+        category = ""
+    try:
+        culture = parts[2]
+    except IndexError:
+        culture = ""
+    nouns[noun] = (category, culture)
 
 adjectives = [l for l in open("vocab/adjectives.txt").read().split("\n") if l]
 

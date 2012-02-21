@@ -1,7 +1,7 @@
 bass:meat:
 beans:vegetable:
 beef:meat:
-catfish:meat
+catfish:meat:
 celery:vegetable:
 cheese:dairy:American
 chicken:meat:
@@ -31,4 +31,4 @@ tilapia:meat:
 tofu:meat:Asian
 tuna:meat:
 turkey:meat:American
-yogurt:
+yogurt:dairy:
