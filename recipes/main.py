@@ -5,7 +5,9 @@ from sys import stdin, stdout
 
 import nltk
 
+from recipe import fuzzyfind
 from scrape import scrapeRecipe, scrapeSearch
+from vocab import nouns
 
 
 def trim(text):
@@ -23,9 +25,20 @@ def loadNltk():
         nltk.download("book")
 
 
+def getChoice(options):
+    """ Get a numeric choice from a list of options. """
+    choice = -1
+    while choice < 0 or choice >= len(options):
+        for i, opt in enumerate(options):
+            stdout.write("  %2d. %s\n" % (i, opt))
+        stdout.write("> ")
+        choice = int(trim(stdin.readline()))
+    return choice
+
+
+loadNltk()
 while (True):
-    loadNltk()
-    stdout.write("Enter a search query: ")
+    stdout.write("\nEnter a search query: ")
     query = trim(stdin.readline())
     if not query:
         stdout.write("Exiting.\n")
@@ -38,19 +51,40 @@ while (True):
         stdout.write("You can't eat that!\n")
     else:
         stdout.write("Results:\n")
-        for (i, result) in enumerate(results):
-            stdout.write(" %d: %s\n" % (i, result[0]))
-            if i >= 9: break
-
-        choice = -1
-        while choice < 0 or choice > min(len(results) - 1, 9):
-            stdout.write("Enter the number of a recipe: ")
-            choice = int(trim(stdin.readline()))
+        stdout.write("Choose a recipe:\n")
+        choice = getChoice([x[0] for x in results[0:10]])
         stdout.write("Scraping...")
         stdout.flush()
         recipe = scrapeRecipe(results[choice][1])
-        stdout.write(" Done!\n")
-        stdout.write("This is what we parsed:\n\n")
+        stdout.write(" Done!\n\n")
         stdout.write(recipe.prettify())
         stdout.write("\n")
+        stdout.write("Now what?\n")
+        choice = getChoice(['substitution', 'culture swap', 'search again'])
+        if choice == 2:
+            continue
+        if choice == 0:
+            ingredients = recipe.ingredients.keys()
+            stdout.write("Take what out?\n")
+            choice = getChoice(ingredients)
+            to_remove = ingredients[choice]
+            try:
+                found = fuzzyfind(to_remove, nouns.keys())
+                category = nouns[found][0]
+            except KeyError:
+                category = 'misc'
+            candidates = [i for i in nouns.keys() if nouns[i][0] == category or
+                    i == to_remove]
+            stdout.write("Put what in?\n")
+            choice = getChoice(candidates[0:10])
+            old_tuple = recipe.ingredients[to_remove]
+            to_add = (candidates[choice], old_tuple[0], old_tuple[1],
+                    old_tuple[2])
+            recipe.changeIngredient(to_remove, to_add)
+            stdout.write("\nYour new recipe, substituting %s for %s:\n" %
+                    (to_add[0], to_remove))
+            stdout.write(recipe.prettify())
+        if choice == 1:
+            # culturize
+            pass
 

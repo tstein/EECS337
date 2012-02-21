@@ -30,29 +30,44 @@ class Recipe(object):
         if self.preptime is not None:
             prettified += "Prep: %s    Cook: %s    Total: %s\n" % \
                 (self.preptime, self.cooktime, self.totaltime)
-        # Make reverse category mappings.
-        categories = dict()
-        for ingredient in self.ingredients:
-            known_ingredient = _fuzzyfind(ingredient, nouns.keys())
-            if known_ingredient is not None:
-                category = nouns[known_ingredient][0]
-                if not category:
-                    category = "misc"
-            else:
-                category = "misc"
-            if category not in categories:
-                categories[category] = []
-            categories[category].append(ingredient)
         prettified += "Ingredients:\n"
-        for category in _sortCategories(categories.keys()):
+        for category in _sortCategories(self.categories.keys()):
             prettified += "  " + category + ":\n"
-            for ingredient in categories[category]:
+            for ingredient in self.categories[category]:
                 prettified += "    " + _prettifyIngredient(ingredient,
                         self.ingredients[ingredient]) + "\n"
         prettified += "Directions:\n"
         for direction in self.directions:
             prettified += "  " + direction + "\n"
         return prettified
+
+    def makeCategories(self):
+        # Make reverse category mappings.
+        self.categories = dict()
+        for ingredient in self.ingredients:
+            known_ingredient = fuzzyfind(ingredient, nouns.keys())
+            if known_ingredient is not None:
+                category = nouns[known_ingredient][0]
+                if not category:
+                    category = "misc"
+            else:
+                category = "misc"
+            if category not in self.categories:
+                self.categories[category] = []
+            self.categories[category].append(ingredient)
+
+    def changeIngredient(self, old, new):
+        """ Swap out an ingredient for a new one.
+            Args:
+                old: A string. The name of the ingredient to remove.
+                new: A tuple to replace the ingredient referred to by old with.
+        """
+        if old is not None:
+            del self.ingredients[old]
+        if new is not None:
+            self.ingredients[new[0]] = (new[1], new[2], new[3])
+        self.makeCategories()
+
 
 
 def _prettifyIngredient(name, (quantity, unit, modifiers)):
@@ -223,7 +238,7 @@ def _understandDirection(direction, ingredients):
     return direction
 
 
-def _fuzzyfind(query, values):
+def fuzzyfind(query, values):
     """ Find... fuzzily. """
     if query in values:
         return query

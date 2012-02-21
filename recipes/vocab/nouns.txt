@@ -86,6 +86,7 @@ thyme:seasoning:Italian
 tilapia:meat:
 tofu:meat:Asian
 tomato:vegetable
+rosemary:seasoning
 tortillas:starch:Mexican
 tuna:meat:
 turkey:meat:American
@@ -93,3 +94,10 @@ turmeric:seasoning:Indian
 vinegar:seasoning
 wine:booze
 yogurt:dairy:
+bay leaves:seasoning
+bay leaf:seasoning
+carrot:vegetable
+pea:vegetable
+salt and pepper:seasoning
+salt and ground black pepper:seasoning
+salt and black pepper:seasoning
