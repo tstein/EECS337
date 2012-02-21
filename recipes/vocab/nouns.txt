@@ -15,9 +15,11 @@ coconut:fruit:
 cod:meat:
 coriander:spice:Indian
 crab:meat:
+cucumber:vegetable:
 cumin:spice:Indian
 curry:spice:Indian
 dough:starch
+dressing:misc:
 duck:meat:
 fettucini:starch:Italian
 flour:starch:
@@ -29,11 +31,11 @@ horseradish:spice:
 jalepenos:spice:Mexican
 lamb:meat:
 lamb:meat:Indian
+lettuce:vegetable:
 lobster:meat:
 maize:vegetable:Mexican
 naan:starch:Indian
 onion:vegetable:
-oregano:spice:
 oregano:spice:Italian
 pork:meat:
 potatoes:starch:American
@@ -45,7 +47,6 @@ shrimp:meat:
 soy sauce:spice:Asian
 sprouts:vegetable:Asian
 steak:meat:American
-thyme:spice:
 thyme:spice:Italian
 tilapia:meat:
 tofu:meat:Asian
@@ -54,6 +55,3 @@ tumeric:spice:Indian
 tuna:meat:
 turkey:meat:American
 yogurt:dairy:
-lettuce:vegetable:
-cucumber:vegetable:
-
