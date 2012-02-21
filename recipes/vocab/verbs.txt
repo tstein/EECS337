@@ -1,0 +1,37 @@
+preheat
+heat
+cook
+blend
+mix
+mix in
+chop
+stir
+stir in
+combine
+melt
+whisk
+whisk in
+continue
+serve
+remove
+discard
+place
+separate
+put
+rinse
+cover
+sprinkle
+wash
+bake
+pour
+stand
+cut
+dice
+mince
+slice
+drain
+fry
+saute
+toss
+add
+
