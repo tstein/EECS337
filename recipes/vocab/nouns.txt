@@ -56,3 +56,6 @@ tofu:meat:Asian
 tuna:meat:
 turkey:meat:American
 yogurt:dairy:
+lettuce:vegetable:
+cucumber:vegetable:
+
