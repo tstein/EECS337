@@ -50,12 +50,11 @@ jalepenos:spice:Mexican
 artichoke:vegetable:Italian
 fettucini:starch:Italian
 thyme:spice:Italian
-oregano:spice:Italian    
-
+oregano:spice:Italian
 tofu:meat:Asian
 tuna:meat:
 turkey:meat:American
 yogurt:dairy:
 lettuce:vegetable:
 cucumber:vegetable:
-
+dressing:misc:
