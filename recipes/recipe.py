@@ -123,6 +123,15 @@ def _isIngredientWord(text, kind):
     """ Test all the ways something can be an ingredient. """
     if text in ingredients:
         return True
+    # Consider all of the following word classes, as returned by nltk, to be
+    # part of ingredient names:
+    #   IN: preposition or conjunction, subordinating
+    #   NN: noun, common, singular or mass
+    #   NNP: noun, proper, singular
+    #   NNPS: noun, proper, plural
+    #   NNS: noun, common, plural
+    #   VBG: verb, present participle or gerund
+    #   VBZ: verb, present tense, 3rd person singular
     if re.match('^(?:(?:[IN]N)|VB[GZ])', kind) and text not in adjectives:
         return True
     return False
@@ -147,6 +156,8 @@ def _understandQuantity(quantity):
 
 
 def splitDirections(directions):
+    """ Split each of the directions parsed from the page into their
+    constituent sentences. """
     newdirections = []
     for direction in directions:
         for direc in re.split('(?:\.\s+(?=[A-Z]))|(?:;\s+)', direction):
@@ -157,6 +168,14 @@ def splitDirections(directions):
 
 
 def understandDirections(directions):
+    """ Take a list of strings representing individual instructions and return a
+    list of (action, object, parameters) tuples. """
     directions = splitDirections(directions)
     return directions
+
+
+def _understandDirection(direction):
+    """ Take a string describing one instruction and return an (action, object,
+    parameters) tuple. """
+    pass
 
