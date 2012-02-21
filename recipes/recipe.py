@@ -4,7 +4,12 @@ manipulating them. """
 
 import re
 
-from vocab import units
+import nltk
+
+from vocab import adjectives, ingredients, units
+
+
+DEBUG = True
 
 
 class Recipe(object):
@@ -30,7 +35,6 @@ class Recipe(object):
             prettified += "  " + _prettifyIngredient(ingredient,
                     self.ingredients[ingredient]) + "\n"
         prettified += "Directions:\n"
-        self.directions = splitDirections(self.directions)
         for direction in self.directions:
             prettified += "  " + direction + "\n"
         return prettified
@@ -39,12 +43,18 @@ class Recipe(object):
 def _prettifyIngredient(name, (quantity, unit, modifiers)):
     """ Stringify an ingredient for human consumption. """
     if quantity is not None:
+        pretty_quant = ("%.2f" % quantity).rstrip('0')
+        if pretty_quant[-1] == ".":
+            pretty_quant = pretty_quant[:-1]
         if unit is not None:
-            return "%s: %.2f %s" % (name, quantity, unit)
+            pretty = "%s: %s %s" % (name, pretty_quant, unit)
         else:
-            return "%s: %.2f" % (name, quantity)
+            pretty = "%s: %s" % (name, pretty_quant)
     else:
-        return name
+        pretty = name
+    if modifiers:
+        pretty += " (" + ", ".join(modifiers) + ")"
+    return pretty
 
 
 def understandIngredients(ingredients):
@@ -81,12 +91,41 @@ def _understandIngredient(ingredient):
         ingredient = ingredient[len(unit):].lstrip()
     else:
         unit = None
-    # Find the ingredient name.
-    name = ingredient
-    # Maybe later.
-    modifiers = None
-
+    # Find the ingredient name and any modifiers.
+    tokens = nltk.pos_tag(nltk.word_tokenize(ingredient))
+    print tokens
+    name = ""
+    modifiers = []
+    making_name = False
+    for text, kind in tokens:
+        if _isIngredientWord(text, kind) or \
+                (making_name and kind.startswith('CC')):
+            if not name:
+                making_name = True
+            if making_name:
+                name += " " + text
+        else:
+            making_name = False
+        if name and not making_name:
+            break
+    if not name:
+        name = ingredient
+        if DEBUG:
+            print "%s failed: %s" % (ingredient, str(tokens))
+            name = "*%s*" % name
+    name = name.lstrip()
+    modifiers = ingredient.split(name)
+    modifiers = [i.lstrip(' ,-').rstrip(' ,-') for i in modifiers if i]
     return (name, quantity, unit, modifiers)
+
+
+def _isIngredientWord(text, kind):
+    """ Test all the ways something can be an ingredient. """
+    if text in ingredients:
+        return True
+    if re.match('^(?:(?:[IN]N)|VB[GZ])', kind) and text not in adjectives:
+        return True
+    return False
 
 
 def _understandQuantity(quantity):
@@ -106,19 +145,18 @@ def _understandQuantity(quantity):
         ret = int(parts[0])
     return ret
 
+
 def splitDirections(directions):
     newdirections = []
     for direction in directions:
-        for direc in direction.split('.'):
+        for direc in re.split('(?:\.\s+(?=[A-Z]))|(?:;\s+)', direction):
             if len(direc) > 0:
-                newdirections.append( direc.lstrip() )
-    
+                direc = direc.lower().rstrip('.')
+                newdirections.append(direc.lstrip())
     return newdirections
-    
-    
-    
+
 
 def understandDirections(directions):
+    directions = splitDirections(directions)
     return directions
-
 
