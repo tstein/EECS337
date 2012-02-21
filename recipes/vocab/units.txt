@@ -39,6 +39,8 @@ square
 squares
 stalk
 stalks
+strip
+strips
 tablespoon
 tablespoons
 teaspoon

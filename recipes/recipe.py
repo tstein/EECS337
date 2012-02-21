@@ -6,7 +6,7 @@ import re
 
 import nltk
 
-from vocab import adjectives, ingredients, units
+from vocab import adjectives, nouns, units
 
 
 DEBUG = True
@@ -95,7 +95,6 @@ def _understandIngredient(ingredient):
         unit = None
     # Find the ingredient name and any modifiers.
     tokens = nltk.pos_tag(nltk.word_tokenize(ingredient))
-    print tokens
     name = ""
     modifiers = []
     making_name = False
@@ -117,13 +116,13 @@ def _understandIngredient(ingredient):
             name = "*%s*" % name
     name = name.lstrip()
     modifiers = ingredient.split(name)
-    modifiers = [i.lstrip(' ,-').rstrip(' ,-') for i in modifiers if i]
+    modifiers = [i.lstrip(' ,-(').rstrip(' ,-)') for i in modifiers if i]
     return (name, quantity, unit, modifiers)
 
 
 def _isIngredientWord(text, kind):
     """ Test all the ways something can be an ingredient. """
-    if text in ingredients:
+    if text in nouns:
         return True
     # Consider all of the following word classes, as returned by nltk, to be
     # part of ingredient names:
@@ -169,15 +168,42 @@ def splitDirections(directions):
     return newdirections
 
 
-def understandDirections(directions):
+def understandDirections(directions, ingredients):
     """ Take a list of strings representing individual instructions and return a
     list of (action, object, parameters) tuples. """
     directions = splitDirections(directions)
-    return directions
+    return [_understandDirection(d, ingredients) for d in directions]
 
 
-def _understandDirection(direction):
+def _understandDirection(direction, ingredients):
     """ Take a string describing one instruction and return an (action, object,
     parameters) tuple. """
-    pass
+    tokens = nltk.pos_tag(nltk.word_tokenize(direction))
+    # Directions generally begin with a verb or a subordinate clause followed by
+    # a verb.
+    firstparam = ""
+    if tokens[0][1] == 'IN':
+        for text, kind in tokens:
+            tokens = tokens[1:]
+            if not re.match('[\w\d]+', text):
+                break
+            firstparam += " " + text
+        firstparam = firstparam.lstrip()
+
+    # NLTK reliably misidentifies verbs as nouns here. Build an action until we
+    # see a part of speech that doesn't belong or an ingredient. e.g.,
+    # [slowly stir] the...
+    # [mash] potatoes...
+    action = ""
+    for text, kind in tokens:
+        # These types don't belong to actions:
+        #   DT: determiner
+        #   IN: preposition or conjunction, subordinating
+        #   TO: to, dummy
+        if re.match('^(?:DT|IN|TO)$', kind) or text in nouns:
+            break
+        action += " " + text
+        tokens = tokens[1:]
+    action = action.lstrip()
+    return direction
 

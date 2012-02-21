@@ -15,6 +15,7 @@ flour:
 garlic:
 haddock:fish,seafood,protein
 halibut:fish,seafood,protein
+horseradish:
 lamb:meat,protein
 lobster:seafood,protein
 oregano:
@@ -29,3 +30,4 @@ tofu:protein
 tuna:fish,seafood,protein
 turkey:poultry,protein,American
 yogurt:
+onion:

@@ -41,7 +41,8 @@ def scrapeRecipe(title):
     recipe.ingredients = understandIngredients(ingredient_strings)
     # Get steps.
     direction_strings = _parseDirections(details.find('div', 'directions'))
-    recipe.directions = understandDirections(direction_strings)
+    recipe.directions = understandDirections(direction_strings,
+            recipe.ingredients)
     return recipe
 
 
