@@ -88,7 +88,8 @@ while (True):
             stdout.write("\nYour new recipe, substituting %s for %s:\n" %
                     (to_add[0], to_remove))
             stdout.write(recipe.prettify())
+            continue
         if choice == 1:
-            # culturize
-            pass
+            stdout.write("***** NOT IMPLEMENTED *****\n")
+            continue
 

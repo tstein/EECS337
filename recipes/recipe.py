@@ -67,16 +67,18 @@ class Recipe(object):
         if new is not None:
             self.ingredients[new[0]] = (new[1], new[2], new[3])
         self.makeCategories()
-        newname = new[0]
         for i, direction in enumerate(self.directions):
-            oldname = old
-            if direction.find(oldname) >= 0:
-                self.directions[i] = direction.replace(oldname, newname)
-                continue
-            found = fuzzyfind(oldname, nltk.word_tokenize(direction))
-            if found is not None:
-                oldname = found
-                self.directions[i] = direction.replace(oldname, newname)
+            self.directions[i] = substituteText(direction, old, new[0])
+        lower_title = substituteText(self.title.lower(), old, new[0])
+        lower_tokens = lower_title.split(" ")
+        tokens = []
+        for t in lower_tokens:
+            t = t[0].upper() + t[1:]
+            tokens.append(t)
+        # Deal with stupid Roman numerals explicitly.
+        if re.match('[IVX]+', tokens[-1]):
+            tokens[-1] = tokens[-1].upper()
+        self.title = " ".join(tokens)
 
 
 def _prettifyIngredient(name, (quantity, unit, modifiers)):
@@ -249,6 +251,8 @@ def _understandDirection(direction, ingredients):
 
 def fuzzyfind(query, values):
     """ Find... fuzzily. """
+    query = query.lower()
+    values = [v.lower() for v in values]
     if query in values:
         return query
     for token in reversed(query.split(" ")):
@@ -259,6 +263,16 @@ def fuzzyfind(query, values):
                     v.startswith(token) or token.startswith(v):
                 return v
     return None
+
+
+def substituteText(string, old, new):
+    """ Substitute old for new in string, using fuzzy logic when possible. """
+    found = fuzzyfind(old, nltk.word_tokenize(string))
+    if found is not None:
+        if found[0].isupper():
+            new[0] = new[0].upper()
+        return string.replace(found, new)
+    return string
 
 
 def _sortCategories(categories):
