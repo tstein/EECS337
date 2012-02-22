@@ -2,6 +2,7 @@
 
 units = [l for l in open("vocab/units.txt").read().split("\n") if l]
 
+ethnicity_set = set()
 nouns = dict()
 noun_lines = [l for l in open("vocab/nouns.txt").read().split("\n")
         if l]
@@ -13,10 +14,12 @@ for line in noun_lines:
     except IndexError:
         category = ""
     try:
-        culture = parts[2]
+        ethnicity = parts[2]
     except IndexError:
-        culture = ""
-    nouns[noun] = (category, culture)
+        ethnicity = ""
+    nouns[noun] = (category, ethnicity)
+    if ethnicity:
+        ethnicity_set.add(ethnicity)
 
 adjectives = [l for l in open("vocab/adjectives.txt").read().split("\n") if l]
 

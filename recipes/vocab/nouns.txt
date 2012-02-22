@@ -8,6 +8,8 @@ bay leaf:seasoning
 bay leaves:seasoning
 beans:vegetable:Mexican
 beef:meat:
+black
+black pepper:seasoning
 blueberries:fruit
 blueberry:fruit
 bok choy:vegetable:Asian
@@ -21,6 +23,7 @@ cheese:dairy:
 cherries:fruit
 cherry:fruit
 chicken:meat:
+chilies:seasoning:Mexican
 chocolate:sweets
 cinnamon:seasoning
 cloves:seasoning
@@ -38,15 +41,16 @@ dough:starch
 dressing:misc:
 duck:meat:
 egg:dairy
+fennel:seasoning:Italian
 fettuccine:starch:
 fettuccini:starch:
 fig:fruit
 flour:starch:
 garlic:seasoning:
 ginger:seasoning:Asian
+ground
 honeydew:fruit
 horseradish:seasoning:
-chilies:seasoning:Mexican
 jalepenos:seasoning:Mexican
 lamb:meat:Indian
 lemon:fruit
@@ -95,6 +99,7 @@ sugar:seasoning
 thyme:seasoning:Italian
 tilapia:meat:
 tofu:meat:Asian
+tomatoes:vegetable
 tomato:vegetable
 tortillas:starch:Mexican
 tuna:meat:

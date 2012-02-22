@@ -3,6 +3,7 @@
 manipulating them. """
 
 import re
+from random import randint
 
 import nltk
 
@@ -31,9 +32,9 @@ class Recipe(object):
         prettified = "\n" + self.title + ":\n"
         relevant_ethnicities = [k for k, v in self.ethnicities.iteritems()]
         if len(relevant_ethnicities) > 0:
-            prettified += "`-> This recipe is kinda "
+            prettified += "`-> This recipe seems kinda "
             prettified += " and ".join(relevant_ethnicities)
-            prettified += "!\n"
+            prettified += ", but what do I know?\n"
         if self.preptime is not None:
             prettified += "    Prep: %s    Cook: %s    Total: %s\n" % \
                 (self.preptime, self.cooktime, self.totaltime)
@@ -86,8 +87,6 @@ class Recipe(object):
             del self.ingredients[old]
         if new is not None:
             self.ingredients[new[0]] = (new[1], new[2], new[3])
-        self.makeCategories()
-        self.makeEthnicities()
         for i, direction in enumerate(self.directions):
             self.directions[i] = substituteText(direction, old, new[0])
         lower_title = substituteText(self.title.lower(), old, new[0])
@@ -100,6 +99,21 @@ class Recipe(object):
         if re.match('[IVX]+', tokens[-1]):
             tokens[-1] = tokens[-1].upper()
         self.title = " ".join(tokens)
+        self.makeCategories()
+        self.makeEthnicities()
+
+
+    def changeEthnicity(self, new):
+        """ Swap out any ethnicity for a new one. """
+        ethnic_foods = {k: c for k, (c, e) in nouns.items() if e == new}
+        for (efood, cat) in ethnic_foods.items():
+            if cat in self.categories:
+                old_name = pickRandom(self.categories[cat])
+                old_tuple = self.ingredients[old_name]
+                new_tuple = (efood, old_tuple[0], old_tuple[1], None)
+                self.changeIngredient(old_name, new_tuple)
+        self.makeCategories()
+        self.makeEthnicities()
 
 
 def _prettifyIngredient(name, (quantity, unit, modifiers)):
@@ -274,8 +288,14 @@ def fuzzyfind(query, values):
     """ Find... fuzzily. """
     query = query.lower()
     values = [v.lower() for v in values]
+    # Try to match the entirety of query against an entire value.
     if query in values:
         return query
+    # Try to match the entirety of query in a value.
+    for v in values:
+        if query in subphrases(v):
+            return query
+    # Try to match the token as best as possible.
     for token in reversed(query.split(" ")):
         if token in values:
             return token
@@ -284,6 +304,14 @@ def fuzzyfind(query, values):
                     v.startswith(token) or token.startswith(v):
                 return v
     return None
+
+
+def subphrases(sentence):
+    """ Generate all subphrases, right-to-left, longest-to-shortest. """
+    tokens = sentence.split(" ")
+    for i in reversed(range(0, len(tokens))):
+        for j in reversed(range(0, len(tokens) - i)):
+            yield " ".join(tokens[j:j + i + 1])
 
 
 def substituteText(string, old, new):
@@ -309,4 +337,9 @@ def _sortCategories(categories):
             categories.remove(p)
             categories.append(p)
     return categories
+
+
+def pickRandom(objects):
+    """ Pick a random item from a list. """
+    return objects[randint(0, len(objects) - 1)]
 
