@@ -65,7 +65,7 @@ while (True):
         if choice == 2:
             continue
         if choice == 0:
-            ingredients = recipe.ingredients.keys()
+            ingredients = sorted(recipe.ingredients.keys())
             stdout.write("Take what out?\n")
             choice = getChoice(ingredients)
             to_remove = ingredients[choice]
@@ -74,12 +74,13 @@ while (True):
                 category = nouns[found][0]
             except KeyError:
                 category = 'misc'
-            candidates = [x for x in nouns.keys() if x != to_remove]
+            candidates = [x for x in nouns.keys() if fuzzyfind(to_remove, [x])
+                    is None]
             if category != 'misc':
                 candidates = [x for x in candidates if nouns[x][0] == category]
-            candidates = shuffle(candidates)
+            shuffle(candidates)
             stdout.write("Put what in?\n")
-            choice = getChoice(candidates[0:10])
+            choice = getChoice(candidates[0:6])
             old_tuple = recipe.ingredients[to_remove]
             to_add = (candidates[choice], old_tuple[0], old_tuple[1],
                     old_tuple[2])
