@@ -44,6 +44,7 @@ def getChoice(options):
 
 def main():
     try:
+        stdout.write("Reticulating splines...\n")
         loadNltk()
         while (True):
             stdout.write("Enter a search query: ")
