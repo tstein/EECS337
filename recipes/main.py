@@ -88,10 +88,11 @@ def main():
                         category = nouns[found][0]
                     except KeyError:
                         category = 'misc'
-                    candidates = [x for x in nouns.keys() if fuzzyfind(to_remove, [x])
-                            is None]
+                    candidates = [x for x in nouns.keys() if
+                            fuzzyfind(to_remove, [x]) is None]
                     if category != 'misc':
-                        candidates = [x for x in candidates if nouns[x][0] == category]
+                        candidates = [x for x in candidates if nouns[x][0] ==
+                                category]
                     shuffle(candidates)
                     stdout.write("Put what in?\n")
                     choice = getChoice(candidates[0:6])
@@ -99,7 +100,8 @@ def main():
                     to_add = (candidates[choice], old_tuple[0], old_tuple[1],
                             old_tuple[2])
                     recipe.changeIngredient(to_remove, to_add)
-                    stdout.write("\nYour new recipe, substituting %s for %s:\n" %
+                    stdout.write(
+                            "\nYour new recipe, substituting %s for %s:\n" % \
                             (to_add[0], to_remove))
                     stdout.write(recipe.prettify())
                     continue
@@ -111,13 +113,13 @@ def main():
                     suffixes = ['ified', 'ated', '-style', 'ized']
                     shuffle(suffixes)
                     suff = suffixes[0]
-                    ethnicity_list = [e for e in sorted(list(ethnicity_set)) if e
-                            not in recipe.ethnicities]
+                    ethnicity_list = [e for e in sorted(list(ethnicity_set)) if
+                            e not in recipe.ethnicities]
                     choice = getChoice(ethnicity_list)
                     new_ethn = ethnicity_list[choice]
                     recipe.changeEthnicity(new_ethn)
-                    stdout.write("Your new recipe, %s %s%s!\n" % (pref, new_ethn,
-                        suff))
+                    stdout.write("Your new recipe, %s %s%s!\n" % (pref,
+                        new_ethn, suff))
                     stdout.write(recipe.prettify())
                     continue
             stdout.write("\n")

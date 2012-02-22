@@ -27,7 +27,7 @@ def scrapeRecipe(title):
     parsed from that page. """
     entity = urlopen(RECIPE_URL % title).read()
     soup = BeautifulSoup(entity)
-    details = soup.find('div', attrs={'class' :
+    details = soup.find('div', attrs={'class':
         re.compile('recipe-details-content.*')})
     recipe = Recipe()
     # Get title and image.
@@ -49,11 +49,12 @@ def scrapeRecipe(title):
 
 
 def _parseSearcha(a):
-    """ Parse a pretty-name and title out of an <a> element and return them as a
-    2-tuple. """
+    """ Parse a pretty-name and title out of an <a> element and return them as
+    a 2-tuple. """
     pretty_name = a.text
     title = a.attrMap['href'].split('/')[-2]
     return (pretty_name, title)
+
 
 def _parseTime(details, name):
     """ Parse {prep, cook, total} time out of the details div. """
@@ -63,10 +64,12 @@ def _parseTime(details, name):
     spans = h5.findAll('span')
     return spans[-1].text
 
+
 def _parseIngredients(div):
     """ Parse a list of strings out of the div.ingredients. """
     return [li.text.replace("&#174;", "") for li in div.findAll('li',
         'ingredient') if li.text != "&nbsp;"]
+
 
 def _parseDirections(div):
     """ Parse a list of strings out of the div.directions. """

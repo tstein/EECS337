@@ -102,7 +102,6 @@ class Recipe(object):
         self.makeCategories()
         self.makeEthnicities()
 
-
     def changeEthnicity(self, new):
         """ Swap out any ethnicity for a new one. """
         ethnic_foods = {k: c for k, (c, e) in nouns.items() if e == new}
@@ -245,8 +244,8 @@ def splitDirections(directions):
 
 
 def understandDirections(directions, ingredients):
-    """ Take a list of strings representing individual instructions and return a
-    list of (action, object, parameters) tuples. """
+    """ Take a list of strings representing individual instructions and return
+    a list of (action, object, parameters) tuples. """
     directions = splitDirections(directions)
     return [_understandDirection(d, ingredients) for d in directions]
 
@@ -255,8 +254,8 @@ def _understandDirection(direction, ingredients):
     """ Take a string describing one instruction and return an (action, object,
     parameters) tuple. """
     tokens = nltk.pos_tag(nltk.word_tokenize(direction))
-    # Directions generally begin with a verb or a subordinate clause followed by
-    # a verb.
+    # Directions generally begin with a verb or a subordinate clause followed
+    # by a verb.
     firstparam = ""
     if tokens[0][1] == 'IN':
         for text, kind in tokens:
