@@ -6,4 +6,5 @@ medium
 plain
 skinless
 spicy
+sweet
 whole

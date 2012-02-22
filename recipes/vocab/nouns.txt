@@ -38,13 +38,15 @@ dough:starch
 dressing:misc:
 duck:meat:
 egg:dairy
-fettuccini:starch:Italian
+fettuccine:starch:
+fettuccini:starch:
 fig:fruit
 flour:starch:
 garlic:seasoning:
 ginger:seasoning:Asian
 honeydew:fruit
 horseradish:seasoning:
+chilies:seasoning:Mexican
 jalepenos:seasoning:Mexican
 lamb:meat:Indian
 lemon:fruit
@@ -62,7 +64,7 @@ onion:vegetable:
 orange:fruit
 oregano:seasoning:Italian
 parsley:seasoning
-pasta:starch
+pasta:starch:Italian
 peach:fruit
 pea:vegetable
 pepper:vegetable:
@@ -79,7 +81,7 @@ salt and ground black pepper:seasoning
 salt and pepper:seasoning
 salt:seasoning
 sauce:seasoning
-sausage:meat:
+sausage:meat:Italian
 scallop:meat:
 seasoning:seasoning
 shrimp:meat:

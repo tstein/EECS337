@@ -44,6 +44,7 @@ def scrapeRecipe(title):
     recipe.directions = understandDirections(direction_strings,
             recipe.ingredients)
     recipe.makeCategories()
+    recipe.makeEthnicities()
     return recipe
 
 

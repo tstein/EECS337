@@ -23,27 +23,35 @@ class Recipe(object):
         self.yields = ""
         self.ingredients = []
         self.directions = []
+        self.categories = dict()
+        self.ethnicities = dict()
 
     def prettify(self):
         """ Stringify a recipe for human consumption. """
-        prettified = self.title + ":\n"
+        prettified = "\n" + self.title + ":\n"
+        relevant_ethnicities = [k for k, v in self.ethnicities.iteritems()]
+        if len(relevant_ethnicities) > 0:
+            prettified += "`-> This recipe is kinda "
+            prettified += " and ".join(relevant_ethnicities)
+            prettified += "!\n"
         if self.preptime is not None:
-            prettified += "Prep: %s    Cook: %s    Total: %s\n" % \
+            prettified += "    Prep: %s    Cook: %s    Total: %s\n" % \
                 (self.preptime, self.cooktime, self.totaltime)
-        prettified += "Ingredients:\n"
+        prettified += "\nIngredients:\n"
         for category in _sortCategories(self.categories.keys()):
             prettified += "  " + category + ":\n"
             for ingredient in self.categories[category]:
                 prettified += "    " + _prettifyIngredient(ingredient,
                         self.ingredients[ingredient]) + "\n"
-        prettified += "Directions:\n"
+        prettified += "\nDirections:\n"
         for direction in self.directions:
-            prettified += "  " + direction + "\n"
+            prettified += "    " + direction + "\n"
+        prettified += "\n"
         return prettified
 
     def makeCategories(self):
-        # Make reverse category mappings.
-        self.categories = dict()
+        """ Make reverse category mappings. """
+        self.categories.clear()
         for ingredient in self.ingredients:
             known_ingredient = fuzzyfind(ingredient, nouns.keys())
             if known_ingredient is not None:
@@ -56,6 +64,18 @@ class Recipe(object):
                 self.categories[category] = []
             self.categories[category].append(ingredient)
 
+    def makeEthnicities(self):
+        """ Make reverse ethnicity mappings. """
+        self.ethnicities.clear()
+        for ingredient in self.ingredients:
+            known_ingredient = fuzzyfind(ingredient, nouns.keys())
+            if known_ingredient is not None:
+                ethnicity = nouns[known_ingredient][1]
+                if ethnicity:
+                    if ethnicity not in self.ethnicities:
+                        self.ethnicities[ethnicity] = []
+                    self.ethnicities[ethnicity].append(ingredient)
+
     def changeIngredient(self, old, new):
         """ Swap out an ingredient for a new one.
             Args:
@@ -67,6 +87,7 @@ class Recipe(object):
         if new is not None:
             self.ingredients[new[0]] = (new[1], new[2], new[3])
         self.makeCategories()
+        self.makeEthnicities()
         for i, direction in enumerate(self.directions):
             self.directions[i] = substituteText(direction, old, new[0])
         lower_title = substituteText(self.title.lower(), old, new[0])
