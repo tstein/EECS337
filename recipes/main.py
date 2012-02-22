@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 """ Main entry point for the project. """
 
+from random import shuffle
 from sys import stdin, stdout
 
 import nltk
@@ -73,8 +74,10 @@ while (True):
                 category = nouns[found][0]
             except KeyError:
                 category = 'misc'
-            candidates = [i for i in nouns.keys() if nouns[i][0] == category or
-                    i == to_remove]
+            candidates = [x for x in nouns.keys() if x != to_remove]
+            if category != 'misc':
+                candidates = [x for x in candidates if nouns[x][0] == category]
+            candidates = shuffle(candidates)
             stdout.write("Put what in?\n")
             choice = getChoice(candidates[0:10])
             old_tuple = recipe.ingredients[to_remove]

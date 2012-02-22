@@ -1,3 +1,6 @@
+fig:fruit
+cranberry:fruit
+cranberries:fruit
 apple:fruit:
 artichoke:vegetable:Italian
 bacon:vegetable:American
@@ -23,6 +26,7 @@ cherries:fruit
 cherry:fruit
 chicken:meat:
 chocolate:sweets
+cinnamon:seasoning
 cloves:seasoning
 coconut:fruit:
 cod:meat:
@@ -34,7 +38,6 @@ cucumber:vegetable:
 cumin:seasoning:Indian
 curry:seasoning:Indian
 dough:starch
-dressing:misc:
 dressing:misc:
 duck:meat:
 egg:dairy
