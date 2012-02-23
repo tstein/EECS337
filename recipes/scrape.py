@@ -8,7 +8,7 @@ from BeautifulSoup import BeautifulSoup
 from recipe import Recipe, understandDirections, understandIngredients
 
 
-SEARCH_URL = "http://allrecipes.com/Search/Recipes.aspx?WithTerm=%s"
+SEARCH_URL = "http://allrecipes.com/search/default.aspx?qt=k&wt=%s"
 RECIPE_URL = "http://allrecipes.com/recipe/%s/detail.aspx"
 
 
@@ -18,7 +18,7 @@ def scrapeSearch(query):
     """
     entity = urlopen(SEARCH_URL % (query.replace(" ", "%20"))).read()
     soup = BeautifulSoup(entity, convertEntities=BeautifulSoup.HTML_ENTITIES)
-    links = soup.findAll('a', id=re.compile('.*lnkRecipeTitle'))
+    links = soup.findAll('a', id=re.compile('.*Recipe_lnkTitle'))
     return [_parseSearcha(a) for a in links]
 
 
