@@ -9,7 +9,7 @@ def main():
     results = []
     
     print "Searching twitter:\n"
-    results = getSearches(api, searchterm, 1050)
+    results = getSearches(api, searchterm, 150)
     for status in results:
         for i in range(len(candidates)):
             if candidates[i][0] in status.text.lower():
@@ -19,10 +19,12 @@ def main():
 def getSearches(api, searchterm, num):
     """ Search twitter for num searches using searchterm """
     results = []
+    pagenum = 1
     while num > 100:
-        results.extend(api.GetSearch(searchterm,per_page=100))
+        results.extend(api.GetSearch(searchterm ,per_page=100, page=pagenum))
         num = num - 100
-    results.extend(api.GetSearch(searchterm,per_page=num))
+        pagenum = pagenum + 1
+    results.extend(api.GetSearch(searchterm, per_page=num, page=pagenum))
     return results
 
     
