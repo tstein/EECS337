@@ -84,6 +84,8 @@ def getSentimentTweets(api, query):
             table += "<br>".join(list({r.text for r in lineResults}))
             table += "</td><tr>"
 
+            table += "</table>"
+
             return table
         except twitter.TwitterError:
             sleep(.5)
