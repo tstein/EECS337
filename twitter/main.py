@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import twitter
+from time import sleep
 
 from flask import Flask, request
 
@@ -11,29 +12,33 @@ from webshit import search_form, wordle_applet
 
 app = Flask(__name__)
 api = twitter.Api()
-candidates = {"romney":{"firstname":"mitt","mentions":0, "votedfor":0}, "paul":{"firstname":"ron","mentions":0, "votedfor":0}, "gingrich":{"firstname":"newt","mentions":0, "votedfor":0}, "santorum":{"firstname":"rick","mentions":0, "votedfor":0}}
+candidates = {"romney":{"firstname":"mitt","mentions":0, "votedfor":0}, "ron paul":{"firstname":"ron","mentions":0, "votedfor":0}, "gingrich":{"firstname":"newt","mentions":0, "votedfor":0}, "santorum":{"firstname":"rick","mentions":0, "votedfor":0}}
 
 
 @app.route("/")
 def mainpage():
     zeitgeist = dict()
-    for c in candidates:
+    clist = candidates.keys()
+    for c in clist:
         print("Scrapin' %s" % c)
         (results, alltext, alltagstext) = getTweets(c)
-        sentiment = allSentiments(results)
+        sentiment = allSentiments([r.text for r in results])
         zeitgeist[c] = (results, alltext, alltagstext, sentiment)
 
-    page = ""
-    for c in candidates:
+    page = "<html><head></head><body>"
+    for c in clist:
         print("Renderin' %s" % c)
         (results, alltext, alltagstext, sentiment) = zeitgeist[c]
         page += "<h1>%s</h1><br>" % c
         page += "Candidate sentiment: %d<br>" % sentiment
+        page += getSentimentTweets(api, c)
+        page += "<br>"
         page += "<h1>Word cloud:</h1>"
         page += wordle_applet.format(text=alltext)
         page += "<h1>Tag cloud:</h1>"
         page += wordle_applet.format(text=alltagstext)
-        page += getSentimentTweets(c, api)
+        page += "<br>"
+    page += "</body></html>"
     return page
 
 
@@ -57,7 +62,7 @@ def searchresults():
 
 
 def getTweets(query):
-    results = getSearches(query, 10)
+    results = getSearches(query, 100)
     allwords = []
     for r in results:
         words = [w.lower() for w in r.text.split(" ") if validTweetword(w, query.split(" "))]
@@ -125,21 +130,26 @@ def countVotedFors(candidates):
 
 def getSearches(searchterm, num=100):
     """ Search twitter for num searches using searchterm """
-    results = []
-    pagenum = 1
-    per_pagenum = 100
-    while num > per_pagenum and pagenum <= 14:
-        results.extend(api.GetSearch(searchterm ,per_page=per_pagenum, page=pagenum))
-        num = num - per_pagenum
-        pagenum = pagenum + 1
-    results.extend(api.GetSearch(searchterm, per_page=per_pagenum, page=pagenum))
-    last = results[-1].id
-    for i in range(len(results) - 2, -1, -1):
-        if last == results[i].id:
-            del results[i]
-        else:
-            last = results[i].id
-    return results
+    while True:
+        try:
+            results = []
+            pagenum = 1
+            per_pagenum = 100
+            while num > per_pagenum and pagenum <= 14:
+                results.extend(api.GetSearch(searchterm ,per_page=per_pagenum, page=pagenum))
+                num = num - per_pagenum
+                pagenum = pagenum + 1
+            results.extend(api.GetSearch(searchterm, per_page=per_pagenum, page=pagenum))
+            last = results[-1].id
+            for i in range(len(results) - 2, -1, -1):
+                if last == results[i].id:
+                    del results[i]
+                else:
+                    last = results[i].id
+            return results
+        except twitter.TwitterError:
+            sleep(.5)
+            continue
 
 
 if __name__ == "__main__":
