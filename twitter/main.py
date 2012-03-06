@@ -2,21 +2,29 @@
 
 import twitter
 
-from flask import Flask
+from flask import Flask, request
 app = Flask(__name__)
+
+from webshit import search_form, wordle_applet
 
 
 @app.route("/")
 def mainpage():
-    return "search for somethin'"
+    return search_form
 
 
-@app.route("/<query>")
-def search(query):
-    return "query: " + query
+@app.route("/query", methods=['POST'])
+def search():
+    query = request.form['query']
+    return wordle_applet.format(text=query)
+
+
+    print wordle_applet.format(text="test")
+    return "foop" 
 
 
 def main():
+    app.run(port=1025, debug=True)
     api = twitter.Api()
     candidates = {"romney":0,"paul":0, "gingrich":0, "santorum":0}
     searchterm = "#supertuesday"
@@ -29,7 +37,6 @@ def main():
             if candidate in status.text.lower():
                 candidates[candidate] = candidates[candidate] + 1
     print candidates
-    app.run(debug=True)
 
 
 def getSearches(api, searchterm, num):
