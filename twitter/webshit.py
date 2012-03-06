@@ -6,7 +6,7 @@ search_form = """
 """
 
 
-wordle_applet = """
+wordle_applet = unicode("""
     <applet 
         name="wordle" 
         mayscript="mayscript" 
@@ -19,5 +19,5 @@ wordle_applet = """
         Your browser doesn't seem to understand the APPLET tag.
         You need to install and enable the <a href="http://java.com/">Java</a> plugin.
     </applet>
-"""
+""")
 
