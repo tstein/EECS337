@@ -4,16 +4,33 @@ import twitter
 
 def main():
     api = twitter.Api()
-    candidates = {"romney":0,"paul":0, "gingrich":0, "santorum":0}
+    candidates = {"romney":{"firstname":"mitt","mentions":0, "votedfor":0}, "paul":{"firstname":"ron","mentions":0, "votedfor":0}, "gingrich":{"firstname":"newt","mentions":0, "votedfor":0}, "santorum":{"firstname":"rick","mentions":0, "votedfor":0}}
+    
     searchterm = "#supertuesday"
     results = []
     
-    print "Searching twitter:\n"
-    results = getSearches(api, searchterm, 150)
+    print "Searching twitter:"
+    results = getSearches(api, searchterm, 100)
+    
+    # Count mentions of each candidate 
     for status in results:
         for candidate in candidates:
             if candidate in status.text.lower():
-                candidates[candidate] = candidates[candidate] + 1
+                candidates[candidate]["mentions"] = candidates[candidate]["mentions"] + 1
+    
+    # Calculate voted for percentage
+    timelen = dict.fromkeys(candidates.keys())
+    for candidate in candidates:
+        searchterm = "\"i voted for " + candidate + "\" OR \"i voted for " + candidates[candidate]["firstname"] + " " + candidate +"\""
+        res = getSearches( api, searchterm, 15)
+        timelen[candidate] = max([s.created_at_in_seconds for s in res]) - min([s.created_at_in_seconds for s in res])
+    timesum  = 0
+    print timelen
+    for i in timelen:
+        timesum = timesum + timelen[i]
+    for candidate in candidates:
+        candidates[candidate]["votedfor"] = float(timelen[candidate]) / float(timesum)
+    
     print candidates
 
 def getSearches(api, searchterm, num):
@@ -21,7 +38,7 @@ def getSearches(api, searchterm, num):
     results = []
     pagenum = 1
     per_pagenum = 100
-    while num > per_pagenum:
+    while num > per_pagenum and pagenum <= 14:
         results.extend(api.GetSearch(searchterm ,per_page=per_pagenum, page=pagenum))
         num = num - per_pagenum
         pagenum = pagenum + 1
