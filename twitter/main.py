@@ -120,6 +120,8 @@ def countVotedFors(candidates):
         searchterm = searchterm + "\"im voting for " + candidate + "\" OR \"im voting for " + candidates[candidate]["firstname"] + " " + candidate +"\" OR "
         searchterm = searchterm + "\"i\'m voting for " + candidate + "\" OR \"i\'m voting for " + candidates[candidate]["firstname"] + " " + candidate +"\""
         searchterm = searchterm + ")"
+        if candidate == "ron paul":
+            searchterm = "(\"i voted for paul\" OR \"i voted for ron paul\" OR \"im voting for paul\" OR \"im voting for ron paul\" OR \"i\'m voting for paul\" OR \"i\'m voting for ron paul\")"
         res = getSearches( searchterm, 15)
         timelen[candidate] = max([s.created_at_in_seconds for s in res]) - min([s.created_at_in_seconds for s in res])
     timesum  = 0.0
