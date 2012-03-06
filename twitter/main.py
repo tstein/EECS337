@@ -93,7 +93,11 @@ def performAnalysis():
     
     countMentions(results, candidates)
     countVotedFors(candidates)   
-    print candidates
+    output = "< table border = \"1\">\n<tr>\n<th>Candidate</th>\n<th>Mentions</th>\n<th>Voting For</th></tr>"
+    for c in candidates:
+        output = output + "\n<tr>%s</tr><td>%.1f</td><td>%.1f</td></tr>" %(c, 100.0*float(candidates[c]["mentions"])/float(len(results)), 100.0*candidates[c]["votedfor"]) 
+    output = output + "</table>"
+    return output
 
 def countMentions(results, candidates):
     # Count mentions of each candidate 
