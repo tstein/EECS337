@@ -4,29 +4,46 @@ import twitter
 
 from flask import Flask, request
 
+from sentiment import allSentiments
 from webshit import search_form, wordle_applet
 
 
 app = Flask(__name__)
 api = twitter.Api()
+candidates = {"romney":{"firstname":"mitt","mentions":0, "votedfor":0}, "paul":{"firstname":"ron","mentions":0, "votedfor":0}, "gingrich":{"firstname":"newt","mentions":0, "votedfor":0}, "santorum":{"firstname":"rick","mentions":0, "votedfor":0}}
 
 
 @app.route("/")
 def mainpage():
+    zeitgeist = dict()
+    for c in candidates:
+        print("Scrapin' %s" % c)
+        (results, alltext, alltagstext) = getTweets(c)
+        sentiment = allSentiments(results)
+        zeitgeist[c] = (results, alltext, alltagstext, sentiment)
+
+    page = ""
+    for c in candidates:
+        print("Renderin' %s" % c)
+        (results, alltext, alltagstext, sentiment) = zeitgeist[c]
+        page += "<h1>%s</h1><br>" % c
+        page += "Candidate sentiment: %d<br>" % sentiment
+        page += "<h1>Word cloud:</h1>"
+        page += wordle_applet.format(text=alltext)
+        page += "<h1>Tag cloud:</h1>"
+        page += wordle_applet.format(text=alltagstext)
+    return page
+
+
+@app.route("/search")
+def search():
     return search_form
 
 
 @app.route("/query", methods=['POST'])
-def search():
+def searchresults():
     query = request.form['query']
-    results = getSearches(query, 1000)
-    allwords = []
-    for r in results:
-        words = [w.lower() for w in r.text.split(" ") if validTweetword(w, query.split(" "))]
-        allwords.extend(words)
-    alltext = ' '.join(allwords)
-    alltags = [w for w in allwords if w and w[0] == "#"]
-    alltagstext = ' '.join(alltags)
+    (results, alltext, alltagstext) = getTweets(query)
     page = ""
     page += "<h1>Search: %s</h1>" % query
     page += "<h1>Word cloud:</h1>"
@@ -35,6 +52,18 @@ def search():
     page += wordle_applet.format(text=alltagstext)
     page += "<br><h1>Sentiment analysis</h1>"
     return page
+
+
+def getTweets(query):
+    results = getSearches(query, 10)
+    allwords = []
+    for r in results:
+        words = [w.lower() for w in r.text.split(" ") if validTweetword(w, query.split(" "))]
+        allwords.extend(words)
+    alltext = ' '.join(allwords)
+    alltags = [w for w in allwords if w and w[0] == "#"]
+    alltagstext = ' '.join(alltags)
+    return (results, alltext, alltagstext)
 
 
 def validTweetword(word, banned):
@@ -54,7 +83,6 @@ def main():
 
 
 def performAnalysis():
-    candidates = {"romney":{"firstname":"mitt","mentions":0, "votedfor":0}, "paul":{"firstname":"ron","mentions":0, "votedfor":0}, "gingrich":{"firstname":"newt","mentions":0, "votedfor":0}, "santorum":{"firstname":"rick","mentions":0, "votedfor":0}}
     searchterm = "#supertuesday"
     results = []
     numbody = 100
