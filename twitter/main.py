@@ -4,29 +4,48 @@ import twitter
 
 from flask import Flask, request
 
+from cathy import getSentimentTweets
+from sentiment import allSentiments
 from webshit import search_form, wordle_applet
 
 
 app = Flask(__name__)
 api = twitter.Api()
+candidates = {"romney":{"firstname":"mitt","mentions":0, "votedfor":0}, "paul":{"firstname":"ron","mentions":0, "votedfor":0}, "gingrich":{"firstname":"newt","mentions":0, "votedfor":0}, "santorum":{"firstname":"rick","mentions":0, "votedfor":0}}
 
 
 @app.route("/")
 def mainpage():
+    zeitgeist = dict()
+    for c in candidates:
+        print("Scrapin' %s" % c)
+        (results, alltext, alltagstext) = getTweets(c)
+        sentiment = allSentiments(results)
+        zeitgeist[c] = (results, alltext, alltagstext, sentiment)
+
+    page = ""
+    for c in candidates:
+        print("Renderin' %s" % c)
+        (results, alltext, alltagstext, sentiment) = zeitgeist[c]
+        page += "<h1>%s</h1><br>" % c
+        page += "Candidate sentiment: %d<br>" % sentiment
+        page += "<h1>Word cloud:</h1>"
+        page += wordle_applet.format(text=alltext)
+        page += "<h1>Tag cloud:</h1>"
+        page += wordle_applet.format(text=alltagstext)
+        page += getSentimentTweets(c, api)
+    return page
+
+
+@app.route("/search")
+def search():
     return search_form
 
 
 @app.route("/query", methods=['POST'])
-def search():
+def searchresults():
     query = request.form['query']
-    results = getSearches(query, 1000)
-    allwords = []
-    for r in results:
-        words = [w.lower() for w in r.text.split(" ") if validTweetword(w, query.split(" "))]
-        allwords.extend(words)
-    alltext = ' '.join(allwords)
-    alltags = [w for w in allwords if w and w[0] == "#"]
-    alltagstext = ' '.join(alltags)
+    (results, alltext, alltagstext) = getTweets(query)
     page = ""
     page += "<h1>Search: %s</h1>" % query
     page += "<h1>Word cloud:</h1>"
@@ -35,6 +54,18 @@ def search():
     page += wordle_applet.format(text=alltagstext)
     page += "<br><h1>Sentiment analysis</h1>"
     return page
+
+
+def getTweets(query):
+    results = getSearches(query, 10)
+    allwords = []
+    for r in results:
+        words = [w.lower() for w in r.text.split(" ") if validTweetword(w, query.split(" "))]
+        allwords.extend(words)
+    alltext = ' '.join(allwords)
+    alltags = [w for w in allwords if w and w[0] == "#"]
+    alltagstext = ' '.join(alltags)
+    return (results, alltext, alltagstext)
 
 
 def validTweetword(word, banned):
@@ -54,7 +85,6 @@ def main():
 
 
 def performAnalysis():
-    candidates = {"romney":{"firstname":"mitt","mentions":0, "votedfor":0}, "paul":{"firstname":"ron","mentions":0, "votedfor":0}, "gingrich":{"firstname":"newt","mentions":0, "votedfor":0}, "santorum":{"firstname":"rick","mentions":0, "votedfor":0}}
     searchterm = "#supertuesday"
     results = []
     numbody = 100
@@ -76,15 +106,18 @@ def countVotedFors(candidates):
     # Calculate voted for percentage
     timelen = dict.fromkeys(candidates.keys())
     for candidate in candidates:
-        searchterm = "\"i voted for " + candidate + "\" OR \"i voted for " + candidates[candidate]["firstname"] + " " + candidate +"\""
+        searchterm = "(\"i voted for " + candidate + "\" OR \"i voted for " + candidates[candidate]["firstname"] + " " + candidate +"\" OR "
+        searchterm = searchterm + "\"im voting for " + candidate + "\" OR \"im voting for " + candidates[candidate]["firstname"] + " " + candidate +"\" OR "
+        searchterm = searchterm + "\"i\'m voting for " + candidate + "\" OR \"i\'m voting for " + candidates[candidate]["firstname"] + " " + candidate +"\""
+        searchterm = searchterm + ")"
         res = getSearches( searchterm, 15)
         timelen[candidate] = max([s.created_at_in_seconds for s in res]) - min([s.created_at_in_seconds for s in res])
-    timesum  = 0
+    timesum  = 0.0
     print timelen
     for i in timelen:
-        timesum = timesum + timelen[i]
+        timesum = timesum + 1.0/ float(timelen[i])
     for candidate in candidates:
-        candidates[candidate]["votedfor"] = float(timelen[candidate]) / float(timesum)
+        candidates[candidate]["votedfor"] = 1.0/float(timelen[candidate]) / float(timesum)
 
 def getSearches(searchterm, num=100):
     """ Search twitter for num searches using searchterm """

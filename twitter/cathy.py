@@ -15,54 +15,68 @@ states = {"Alaska":"(#alaska OR #alaskaprimary OR #alaska2012 OR #akprimary OR #
 
 
 
-# searching for positive sentiment
-happySearchTerm = query+" :)"
-happyResults = api.GetSearch(happySearchTerm)
+def getSentimentTweets(api, query):
+    table = "<table>"
 
-print "POSITIVE TWEETS ABOUT ", query
-for status in happyResults:
-    print status.text
-    print "\n"
+    # searching for positive sentiment
+    happySearchTerm = query+" :)"
+    happyResults = api.GetSearch(happySearchTerm)
 
-
-
-# searching for negative sentiment
-madSearchTerm = query+" :("
-madResults = api.GetSearch(madSearchTerm)
-
-print "NEGATIVE TWEETS ABOUT ", query
-for status in madResults:
-    print status.text
-    print "\n"
+    table += "<td>POSITIVE TWEETS</td>"
+    table += "<td>"
+    table += "\n".join([r.text for r in happyResults])
+    table += "</td><tr>"
 
 
+    # searching for negative sentiment
+    madSearchTerm = query+" :("
+    madResults = api.GetSearch(madSearchTerm)
 
-# searching for questions
-qSearchTerm = query+" ?"
-qResults = api.GetSearch(qSearchTerm)
-
-print "QUESTIONS ABOUT ", query
-for status in qResults:
-    print status.text
-    print "\n"
-
-
-# searching for surprise ("omg" "wow" "whoa" "can't believe")
-wowSearchTerm = query+" (omg OR wow OR whoa OR \"can't believe\" OR \"cannot believe\")"
-wowResults = api.GetSearch(wowSearchTerm)
-
-print "SURPRISED TWEETS ABOUT ", query
-for status in wowResults:
-    print status.text
-    print "\n"
+    table += "<td>NEGATIVE TWEETS</td>"
+    table += "<td>"
+    table += "\n".join([r.text for r in madResults])
+    table += "</td><tr>"
 
 
-# searching for links shared
-linkSearchTerm = query+" http"
-linkResults = api.GetSearch(linkSearchTerm)
 
-print "LINKS SHARED ABOUT ", query
-for status in linkResults:
-    print status.text
-    print "\n"
-    
+    # searching for questions
+    qSearchTerm = query+" ?"
+    qResults = api.GetSearch(qSearchTerm)
+
+    table += "<td>INQUISITIVE TWEETS</td>"
+    table += "<td>"
+    table += "\n".join([r.text for r in qResults])
+    table += "</td><tr>"
+
+
+    # searching for surprise ("omg" "wow" "whoa" "can't believe")
+    wowSearchTerm = query+" (omg OR wow OR whoa OR \"can't believe\" OR \"cannot believe\")"
+    wowResults = api.GetSearch(wowSearchTerm)
+
+    table += "<td>SHOCKED TWEETS</td>"
+    table += "<td>"
+    table += "\n".join([r.text for r in wowResults])
+    table += "</td><tr>"
+
+
+    # searching for links shared
+    linkSearchTerm = query+" filter:links"
+    linkResults = api.GetSearch(linkSearchTerm)
+
+ 
+    table += "<td>LINKFUL TWEETS</td>"
+    table += "<td>"
+    table += "\n".join([r.text for r in linkResults])
+    table += "</td><tr>"
+
+    # searching for info about lines
+    lineSearchTerm = "(\"long line\" OR \"short line\" OR \"no line\" OR \"no lines\" OR \"short lines\" OR \"long lines\") (poll OR polls OR polling OR voting OR vote OR voters OR #gop2012 OR #supertuesday)"
+    lineResults = api.GetSearch(lineSearchTerm)
+
+    table += "<td>TWEETS ABOUT LINES</td>"
+    table += "<td>"
+    table += "\n".join([r.text for r in lineResults])
+    table += "</td><tr>"
+
+    return table
+        
