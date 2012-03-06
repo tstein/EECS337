@@ -76,15 +76,18 @@ def countVotedFors(candidates):
     # Calculate voted for percentage
     timelen = dict.fromkeys(candidates.keys())
     for candidate in candidates:
-        searchterm = "\"i voted for " + candidate + "\" OR \"i voted for " + candidates[candidate]["firstname"] + " " + candidate +"\""
+        searchterm = "(\"i voted for " + candidate + "\" OR \"i voted for " + candidates[candidate]["firstname"] + " " + candidate +"\" OR "
+        searchterm = searchterm + "\"im voting for " + candidate + "\" OR \"im voting for " + candidates[candidate]["firstname"] + " " + candidate +"\" OR "
+        searchterm = searchterm + "\"i\'m voting for " + candidate + "\" OR \"i\'m voting for " + candidates[candidate]["firstname"] + " " + candidate +"\""
+        searchterm = searchterm + ")"
         res = getSearches( searchterm, 15)
         timelen[candidate] = max([s.created_at_in_seconds for s in res]) - min([s.created_at_in_seconds for s in res])
-    timesum  = 0
+    timesum  = 0.0
     print timelen
     for i in timelen:
-        timesum = timesum + timelen[i]
+        timesum = timesum + 1.0/ float(timelen[i])
     for candidate in candidates:
-        candidates[candidate]["votedfor"] = float(timelen[candidate]) / float(timesum)
+        candidates[candidate]["votedfor"] = 1.0/float(timelen[candidate]) / float(timesum)
 
 def getSearches(searchterm, num=100):
     """ Search twitter for num searches using searchterm """
