@@ -7,20 +7,19 @@ def getSentiment(text):
         data="text=%s" % text).read())
 
 def allSentiments(results):   
-    posTotal = 0
-    negTotal = 0
-    for s in results:
-        text = unicodedata.normalize('NFKD', s.text).encode('ascii','ignore')
-        
-        sentDict = getSentiment(text)
-        sent = sentDict['label']
-        
-        if sent == 'pos':
-            posTotal += 1
-           # posTweets.add(text)
-        elif sent == 'neg':
-            negTotal += 1
-           # negTweets.add(text)
+    allTweets = results' '.join(results)
+    sentVal = 0
+    text = unicodedata.normalize('NFKD', allTweets).encode('ascii','ignore')
+    
+    sentDict = getSentiment(text)
+    sent = sentDict['label']
+    
+    if sent == 'pos':
+        sentVal = 1
+       # posTweets.add(text)
+    elif sent == 'neg':
+        sentVal = -1
+       # negTweets.add(text)
      
-    return posTotal - negTotal
+    return sentVal
  
