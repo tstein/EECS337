@@ -20,11 +20,18 @@ def getSearches(api, searchterm, num):
     """ Search twitter for num searches using searchterm """
     results = []
     pagenum = 1
-    while num > 100:
-        results.extend(api.GetSearch(searchterm ,per_page=100, page=pagenum))
-        num = num - 100
+    per_pagenum = 100
+    while num > per_pagenum:
+        results.extend(api.GetSearch(searchterm ,per_page=per_pagenum, page=pagenum))
+        num = num - per_pagenum
         pagenum = pagenum + 1
-    results.extend(api.GetSearch(searchterm, per_page=num, page=pagenum))
+    results.extend(api.GetSearch(searchterm, per_page=per_pagenum, page=pagenum))
+    last = results[-1].id
+    for i in range(len(results) - 2, -1, -1):
+        if last == results[i].id:
+            del results[i]
+        else:
+            last = results[i].id
     return results
 
     
