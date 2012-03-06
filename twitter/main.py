@@ -3,9 +3,11 @@
 import twitter
 
 from flask import Flask, request
-app = Flask(__name__)
 
 from webshit import search_form, wordle_applet
+
+
+app = Flask(__name__)
 
 
 @app.route("/")
