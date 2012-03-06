@@ -16,10 +16,10 @@ states = {"Alaska":"(#alaska OR #alaskaprimary OR #alaska2012 OR #akprimary OR #
 
 
 # searching for positive sentiment
-happySearchTerm = searchterm+" :)"
+happySearchTerm = query+" :)"
 happyResults = api.GetSearch(happySearchTerm)
 
-print "POSITIVE TWEETS ABOUT ", searchterm
+print "POSITIVE TWEETS ABOUT ", query
 for status in happyResults:
     print status.text
     print "\n"
@@ -27,10 +27,10 @@ for status in happyResults:
 
 
 # searching for negative sentiment
-madSearchTerm = searchterm+" :("
+madSearchTerm = query+" :("
 madResults = api.GetSearch(madSearchTerm)
 
-print "NEGATIVE TWEETS ABOUT ", searchterm
+print "NEGATIVE TWEETS ABOUT ", query
 for status in madResults:
     print status.text
     print "\n"
@@ -38,20 +38,31 @@ for status in madResults:
 
 
 # searching for questions
-qSearchTerm = searchterm+" ?"
+qSearchTerm = query+" ?"
 qResults = api.GetSearch(qSearchTerm)
 
-print "QUESTIONS ABOUT ", searchterm
+print "QUESTIONS ABOUT ", query
 for status in qResults:
     print status.text
     print "\n"
 
 
 # searching for surprise ("omg" "wow" "whoa" "can't believe")
-wowSearchTerm = searchterm+" (\"omg\" OR \"wow\" OR \"whoa\" OR \"can't believe\" OR \"cannot believe\")"
+wowSearchTerm = query+" (omg OR wow OR whoa OR \"can't believe\" OR \"cannot believe\")"
 wowResults = api.GetSearch(wowSearchTerm)
 
-print "SURPRISED TWEETS ABOUT ", searchterm
+print "SURPRISED TWEETS ABOUT ", query
 for status in wowResults:
     print status.text
     print "\n"
+
+
+# searching for links shared
+linkSearchTerm = query+" http"
+linkResults = api.GetSearch(linkSearchTerm)
+
+print "LINKS SHARED ABOUT ", query
+for status in linkResults:
+    print status.text
+    print "\n"
+    
