@@ -7,7 +7,7 @@ def getSentiment(text):
         data="text=%s" % text).read())
 
 def allSentiments(results):   
-    allTweets = results' '.join(results)
+    allTweets = ' '.join(results)
     sentVal = 0
     text = unicodedata.normalize('NFKD', allTweets).encode('ascii','ignore')
     
