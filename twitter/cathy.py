@@ -58,7 +58,7 @@ for status in wowResults:
 
 
 # searching for links shared
-linkSearchTerm = query+" http"
+linkSearchTerm = query+" filter:links"
 linkResults = api.GetSearch(linkSearchTerm)
 
 print "LINKS SHARED ABOUT ", query
