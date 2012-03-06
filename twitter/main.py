@@ -2,6 +2,20 @@
 
 import twitter
 
+from flask import Flask
+app = Flask(__name__)
+
+
+@app.route("/")
+def mainpage():
+    return "search for somethin'"
+
+
+@app.route("/<query>")
+def search(query):
+    return "query: " + query
+
+
 def main():
     api = twitter.Api()
     candidates = [("romney", 0), ("paul",0), ("gingrich",0), ("santorum",0)]
@@ -15,6 +29,8 @@ def main():
             if candidates[i][0] in status.text.lower():
                 candidates[i] = (candidates[i][0], candidates[i][1] +1)
     print candidates
+    app.run(debug=True)
+
 
 def getSearches(api, searchterm, num):
     """ Search twitter for num searches using searchterm """
@@ -34,7 +50,7 @@ def getSearches(api, searchterm, num):
             last = results[i].id
     return results
 
-    
 
 if __name__ == "__main__":
-    main()                
+    main()
+
