@@ -51,16 +51,22 @@ def performAnalysis():
     candidates = {"romney":{"firstname":"mitt","mentions":0, "votedfor":0}, "paul":{"firstname":"ron","mentions":0, "votedfor":0}, "gingrich":{"firstname":"newt","mentions":0, "votedfor":0}, "santorum":{"firstname":"rick","mentions":0, "votedfor":0}}
     searchterm = "#supertuesday"
     results = []
-    numbody = 1000
+    numbody = 100
     print "Searching twitter:"
     results = getSearches(searchterm, numbody)
     
+    countMentions(results, candidates)
+    countVotedFors(candidates)   
+    print candidates
+
+def countMentions(results, candidates):
     # Count mentions of each candidate 
     for status in results:
         for candidate in candidates:
             if candidate in status.text.lower():
                 candidates[candidate]["mentions"] = candidates[candidate]["mentions"] + 1
     
+def countVotedFors(candidates):
     # Calculate voted for percentage
     timelen = dict.fromkeys(candidates.keys())
     for candidate in candidates:
@@ -73,10 +79,6 @@ def performAnalysis():
         timesum = timesum + timelen[i]
     for candidate in candidates:
         candidates[candidate]["votedfor"] = float(timelen[candidate]) / float(timesum)
-    
-    print candidates
-
-
 
 def getSearches(searchterm, num=100):
     """ Search twitter for num searches using searchterm """
