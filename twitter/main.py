@@ -4,6 +4,7 @@ import twitter
 
 from flask import Flask, request
 
+from cathy import getSentimentTweets
 from sentiment import allSentiments
 from webshit import search_form, wordle_applet
 
@@ -32,6 +33,7 @@ def mainpage():
         page += wordle_applet.format(text=alltext)
         page += "<h1>Tag cloud:</h1>"
         page += wordle_applet.format(text=alltagstext)
+        page += getSentimentTweets(c, api)
     return page
 
 
