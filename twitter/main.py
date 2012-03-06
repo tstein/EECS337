@@ -25,9 +25,14 @@ def search():
         words = [w.lower() for w in r.text.split(" ") if validTweetword(w, query.split(" "))]
         allwords.extend(words)
     alltext = ' '.join(allwords)
+    alltags = [w for w in allwords if w and w[0] == "#"]
+    alltagstext = ' '.join(alltags)
     page = ""
     page += "<h1>Search: %s</h1>" % query
+    page += "<h1>Word cloud:</h1>"
     page += wordle_applet.format(text=alltext)
+    page += "<h1>Tag cloud:</h1>"
+    page += wordle_applet.format(text=alltagstext)
     page += "<br><h1>Sentiment analysis</h1>"
     return page
 
@@ -46,6 +51,7 @@ def validTweetword(word, banned):
 
 def main():
     app.run(port=1025, debug=True)
+
 
 def performAnalysis():
     candidates = {"romney":{"firstname":"mitt","mentions":0, "votedfor":0}, "paul":{"firstname":"ron","mentions":0, "votedfor":0}, "gingrich":{"firstname":"newt","mentions":0, "votedfor":0}, "santorum":{"firstname":"rick","mentions":0, "votedfor":0}}
