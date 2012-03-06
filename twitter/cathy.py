@@ -65,4 +65,12 @@ print "LINKS SHARED ABOUT ", query
 for status in linkResults:
     print status.text
     print "\n"
+
+
+# searching for info about lines
+lineSearchTerm = "(\"long line\" OR \"short line\" OR \"no line\" OR \"no lines\" OR \"short lines\" OR \"long lines\") (poll OR polls OR polling OR voting OR vote OR voters OR #gop2012 OR #supertuesday)"
+lineResults = api.GetSearch(lineSearchTerm)
+for status in lineResults:
+    print status.text
+    print "\n"
     
