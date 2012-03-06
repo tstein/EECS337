@@ -18,16 +18,16 @@ def search(query):
 
 def main():
     api = twitter.Api()
-    candidates = [("romney", 0), ("paul",0), ("gingrich",0), ("santorum",0)]
+    candidates = {"romney":0,"paul":0, "gingrich":0, "santorum":0}
     searchterm = "#supertuesday"
     results = []
     
     print "Searching twitter:\n"
     results = getSearches(api, searchterm, 150)
     for status in results:
-        for i in range(len(candidates)):
-            if candidates[i][0] in status.text.lower():
-                candidates[i] = (candidates[i][0], candidates[i][1] +1)
+        for candidate in candidates:
+            if candidate in status.text.lower():
+                candidates[candidate] = candidates[candidate] + 1
     print candidates
     app.run(debug=True)
 
