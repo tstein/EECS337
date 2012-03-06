@@ -2,15 +2,58 @@
 
 import twitter
 
+from flask import Flask, request
+
+from webshit import search_form, wordle_applet
+
+
+app = Flask(__name__)
+api = twitter.Api()
+
+
+@app.route("/")
+def mainpage():
+    return search_form
+
+
+@app.route("/query", methods=['POST'])
+def search():
+    query = request.form['query']
+    results = getSearches(query, 1000)
+    allwords = []
+    for r in results:
+        words = [w.lower() for w in r.text.split(" ") if validTweetword(w, query.split(" "))]
+        allwords.extend(words)
+    alltext = ' '.join(allwords)
+    page = ""
+    page += "<h1>Search: %s</h1>" % query
+    page += wordle_applet.format(text=alltext)
+    page += "<br><h1>Sentiment analysis</h1>"
+    return page
+
+
+def validTweetword(word, banned):
+    word = word.lower()
+    banned = [b.lower() for b in banned]
+    if word and word[0] == "@":
+        return False
+    if word in banned:
+        return False
+    if word in ['rt']:
+        return False
+    return True
+
+
 def main():
-    api = twitter.Api()
+    app.run(port=1025, debug=True)
+
+def performAnalysis():
     candidates = {"romney":{"firstname":"mitt","mentions":0, "votedfor":0}, "paul":{"firstname":"ron","mentions":0, "votedfor":0}, "gingrich":{"firstname":"newt","mentions":0, "votedfor":0}, "santorum":{"firstname":"rick","mentions":0, "votedfor":0}}
-    
     searchterm = "#supertuesday"
     results = []
-    
+    numbody = 1000
     print "Searching twitter:"
-    results = getSearches(api, searchterm, 100)
+    results = getSearches(searchterm, numbody)
     
     # Count mentions of each candidate 
     for status in results:
@@ -22,7 +65,7 @@ def main():
     timelen = dict.fromkeys(candidates.keys())
     for candidate in candidates:
         searchterm = "\"i voted for " + candidate + "\" OR \"i voted for " + candidates[candidate]["firstname"] + " " + candidate +"\""
-        res = getSearches( api, searchterm, 15)
+        res = getSearches( searchterm, 15)
         timelen[candidate] = max([s.created_at_in_seconds for s in res]) - min([s.created_at_in_seconds for s in res])
     timesum  = 0
     print timelen
@@ -33,7 +76,9 @@ def main():
     
     print candidates
 
-def getSearches(api, searchterm, num):
+
+
+def getSearches(searchterm, num=100):
     """ Search twitter for num searches using searchterm """
     results = []
     pagenum = 1
@@ -51,7 +96,7 @@ def getSearches(api, searchterm, num):
             last = results[i].id
     return results
 
-    
 
 if __name__ == "__main__":
-    main()                
+    main()
+
