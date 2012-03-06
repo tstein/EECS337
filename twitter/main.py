@@ -76,7 +76,12 @@ def countVotedFors(candidates):
     # Calculate voted for percentage
     timelen = dict.fromkeys(candidates.keys())
     for candidate in candidates:
-        searchterm = "\"i voted for " + candidate + "\" OR \"i voted for " + candidates[candidate]["firstname"] + " " + candidate +"\""
+        searchterm = "(\"i voted for " + candidate + "\" OR \"i voted for " + candidates[candidate]["firstname"] + " " + candidate +"\" OR "
+        searchterm = searchterm + "\"im voting for " + candidate + "\" OR \"im voting for " + candidates[candidate]["firstname"] + " " + candidate +"\" OR "
+        searchterm = searchterm + "\"i\'m voting for " + candidate + "\" OR \"i\'m voting for " + candidates[candidate]["firstname"] + " " + candidate +"\""
+        searchterm = searchterm + ")"
+        
+        print searchterm
         res = getSearches( searchterm, 15)
         timelen[candidate] = max([s.created_at_in_seconds for s in res]) - min([s.created_at_in_seconds for s in res])
     timesum  = 0
