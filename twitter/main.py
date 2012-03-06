@@ -8,6 +8,7 @@ from webshit import search_form, wordle_applet
 
 
 app = Flask(__name__)
+api = twitter.Api()
 
 
 @app.route("/")
@@ -18,26 +19,36 @@ def mainpage():
 @app.route("/query", methods=['POST'])
 def search():
     query = request.form['query']
-    return wordle_applet.format(text=query)
+    results = getSearches(query, 1000)
+    allwords = []
+    for r in results:
+        words = [w.lower() for w in r.text.split(" ") if validTweetword(w, query.split(" "))]
+        allwords.extend(words)
+    alltext = ' '.join(allwords)
+    page = ""
+    page += "<h1>Search: %s</h1>" % query
+    page += wordle_applet.format(text=alltext)
+    page += "<br><h1>Sentiment analysis</h1>"
+    return page
+
+
+def validTweetword(word, banned):
+    word = word.lower()
+    banned = [b.lower() for b in banned]
+    if word and word[0] == "@":
+        return False
+    if word in banned:
+        return False
+    if word in ['rt']:
+        return False
+    return True
 
 
 def main():
     app.run(port=1025, debug=True)
-    api = twitter.Api()
-    candidates = {"romney":0,"paul":0, "gingrich":0, "santorum":0}
-    searchterm = "#supertuesday"
-    results = []
-    
-    print "Searching twitter:\n"
-    results = getSearches(api, searchterm, 150)
-    for status in results:
-        for candidate in candidates:
-            if candidate in status.text.lower():
-                candidates[candidate] = candidates[candidate] + 1
-    print candidates
 
 
-def getSearches(api, searchterm, num):
+def getSearches(searchterm, num=100):
     """ Search twitter for num searches using searchterm """
     results = []
     pagenum = 1
