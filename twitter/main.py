@@ -19,15 +19,29 @@ def mainpage():
 @app.route("/query", methods=['POST'])
 def search():
     query = request.form['query']
-    results = getSearches(query)
-    alltext = ""
+    results = getSearches(query, 1000)
+    allwords = []
     for r in results:
-        alltext += r.text + " "
+        words = [w.lower() for w in r.text.split(" ") if validTweetword(w, query.split(" "))]
+        allwords.extend(words)
+    alltext = ' '.join(allwords)
     page = ""
     page += "<h1>Search: %s</h1>" % query
     page += wordle_applet.format(text=alltext)
     page += "<br><h1>Sentiment analysis</h1>"
     return page
+
+
+def validTweetword(word, banned):
+    word = word.lower()
+    banned = [b.lower() for b in banned]
+    if word and word[0] == "@":
+        return False
+    if word in banned:
+        return False
+    if word in ['rt']:
+        return False
+    return True
 
 
 def main():
