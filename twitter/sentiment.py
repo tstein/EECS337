@@ -8,7 +8,7 @@ def getSentiment(text):
 
 def allSentiments(results):   
     allTweets = ' '.join(results)
-    sentVal = 0
+    sentiment = ''
     rating = 0
     text = unicodedata.normalize('NFKD', allTweets).encode('ascii','ignore')
     
@@ -31,5 +31,5 @@ def allSentiments(results):
     else:    
         sentiment = "neutral"
      
-    return sentVal
+    return sentiment
  
