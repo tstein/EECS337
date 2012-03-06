@@ -26,11 +26,12 @@ def mainpage():
         zeitgeist[c] = (results, alltext, alltagstext, sentiment)
 
     page = "<html><head></head><body>"
+    page += performAnalysis()
     for c in clist:
         print("Renderin' %s" % c)
         (results, alltext, alltagstext, sentiment) = zeitgeist[c]
         page += "<h1>%s</h1><br>" % c
-        page += "Candidate sentiment: %d<br>" % sentiment
+        page += "Candidate sentiment: %s<br>" % sentiment
         page += getSentimentTweets(api, c)
         page += "<br>"
         page += "<h1>Word cloud:</h1>"
@@ -62,7 +63,7 @@ def searchresults():
 
 
 def getTweets(query):
-    results = getSearches(query, 100)
+    results = getSearches(query, 500)
     allwords = []
     for r in results:
         words = [w.lower() for w in r.text.split(" ") if validTweetword(w, query.split(" "))]
@@ -98,9 +99,9 @@ def performAnalysis():
     
     countMentions(results, candidates)
     countVotedFors(candidates)   
-    output = "< table border = \"1\">\n<tr>\n<th>Candidate</th>\n<th>Mentions</th>\n<th>Voting For</th></tr>"
+    output = "<table border = \"1\"><tr><th>Candidate</th><th>Mentions</th><th>Voting For</th></tr>"
     for c in candidates:
-        output = output + "\n<tr>%s</tr><td>%.1f</td><td>%.1f</td></tr>" %(c, 100.0*float(candidates[c]["mentions"])/float(len(results)), 100.0*candidates[c]["votedfor"]) 
+        output = output + "<tr><td>%s</td><td>%.1f</td><td>%.1f</td></tr>" %(c, 100.0*float(candidates[c]["mentions"])/float(len(results)), 100.0*candidates[c]["votedfor"]) 
     output = output + "</table>"
     return output
 
@@ -119,10 +120,11 @@ def countVotedFors(candidates):
         searchterm = searchterm + "\"im voting for " + candidate + "\" OR \"im voting for " + candidates[candidate]["firstname"] + " " + candidate +"\" OR "
         searchterm = searchterm + "\"i\'m voting for " + candidate + "\" OR \"i\'m voting for " + candidates[candidate]["firstname"] + " " + candidate +"\""
         searchterm = searchterm + ")"
+        if candidate == "ron paul":
+            searchterm = "(\"i voted for paul\" OR \"i voted for ron paul\" OR \"im voting for paul\" OR \"im voting for ron paul\" OR \"i\'m voting for paul\" OR \"i\'m voting for ron paul\")"
         res = getSearches( searchterm, 15)
         timelen[candidate] = max([s.created_at_in_seconds for s in res]) - min([s.created_at_in_seconds for s in res])
     timesum  = 0.0
-    print timelen
     for i in timelen:
         timesum = timesum + 1.0/ float(timelen[i])
     for candidate in candidates:
