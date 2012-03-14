@@ -30,7 +30,9 @@ def getSentimentTweets(api, query):
 
             table += "<td>POSITIVE TWEETS</td>"
             table += "<td>"
-            table += "<br>".join(list({r.text for r in happyResults}))
+            table += "<ul>"
+            table += "<br>".join(list({"<li>" + r.text + "</li>" for r in happyResults}))
+            table += "</ul>"
             table += "</td><tr>"
 
 
@@ -40,7 +42,9 @@ def getSentimentTweets(api, query):
 
             table += "<td>NEGATIVE TWEETS</td>"
             table += "<td>"
-            table += "<br>".join(list({r.text for r in madResults}))
+            table += "<ul>"
+            table += "<br>".join(list({"<li>" + r.text + "</li>" for r in madResults}))
+            table += "</ul>"
             table += "</td><tr>"
 
 
@@ -51,7 +55,9 @@ def getSentimentTweets(api, query):
 
             table += "<td>INQUISITIVE TWEETS</td>"
             table += "<td>"
-            table += "<br>".join(list({r.text for r in qResults}))
+            table += "<ul>"
+            table += "<br>".join(list({"<li>" + r.text + "</li>" for r in qResults}))
+            table += "</ul>"
             table += "</td><tr>"
 
 
@@ -61,7 +67,9 @@ def getSentimentTweets(api, query):
 
             table += "<td>SHOCKED TWEETS</td>"
             table += "<td>"
-            table += "<br>".join(list({r.text for r in wowResults}))
+            table += "<ul>"
+            table += "<br>".join(list({"<li>" + r.text + "</li>" for r in wowResults}))
+            table += "</ul>"
             table += "</td><tr>"
 
 
@@ -72,7 +80,9 @@ def getSentimentTweets(api, query):
 
             table += "<td>LINKFUL TWEETS</td>"
             table += "<td>"
-            table += "<br>".join(list({r.text for r in linkResults}))
+            table += "<ul>"
+            table += "<br>".join(list({"<li>"+r.text+"</li>" for r in linkResults}))
+            table += "</ul>"
             table += "</td><tr>"
 
             # searching for info about lines
@@ -81,7 +91,9 @@ def getSentimentTweets(api, query):
 
             table += "<td>TWEETS ABOUT LINES</td>"
             table += "<td>"
-            table += "<br>".join(list({r.text for r in lineResults}))
+            table += "<ul>"
+            table += "<br>".join(list({"<li>"+r.text+"</li>" for r in lineResults}))
+            table += "</ul>"
             table += "</td><tr>"
 
             table += "</table>"

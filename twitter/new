@@ -1,0 +1,12 @@
+import pycurl
+c = pycurl.Curl()
+c.setopt(pycurl.URL, "http://api.website.com")
+c.setopt(pycurl.POST, 1)
+c.setopt(pycurl.POSTFIELDS, "request=%s" % wrapper)
+import StringIO
+b = StringIO.StringIO()
+c.setopt(pycurl.WRITEFUNCTION, b.write)
+c.perform()
+c.close()
+data = b.getvalue()
+

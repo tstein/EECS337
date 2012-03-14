@@ -24,3 +24,55 @@ wordle_applet = unicode("""
     </applet>
 """)
 
+style_info = unicode("""
+    /* ------------------
+ styling for the tables 
+   ------------------   */
+
+
+body
+{
+    color: navy;
+    background-color: #c0deed;
+	line-height: 1.6em;
+	width: 900px;
+	margin: 45px;
+    font-family: 'Open Sans Condensed', sans-serif;
+}
+
+h, h1, h2
+{
+text-transform:capitalize;
+}
+table
+{
+
+	font-size: 12px;
+	margin: 45px;
+	width: 900px;
+	text-align: left;
+	border-collapse: collapse;
+	background-color: #fff;
+}
+
+tr
+{
+	padding: 8px 2px;
+	font-weight: normal;
+	font-size: 14px;
+	border-bottom: 2px solid #6678b1;
+	border-right: 30px solid #fff;
+	border-left: 30px solid #fff;
+	color: #039;
+}
+
+td
+{
+	padding: 12px 2px 0px 2px;
+	border-right: 30px solid #fff;
+	border-left: 30px solid #fff;
+	color: #669;
+}
+""")
+    
+

@@ -7,7 +7,7 @@ from flask import Flask, request
 
 from cathy import getSentimentTweets
 from sentiment import allSentiments
-from webshit import search_form, wordle_applet
+from webshit import search_form, wordle_applet, style_info
 
 
 app = Flask(__name__)
@@ -25,7 +25,12 @@ def mainpage():
         sentiment = allSentiments([r.text for r in results])
         zeitgeist[c] = (results, alltext, alltagstext, sentiment)
 
-    page = "<html><head></head><body>"
+    page = "<html><head>"
+    page += """<link href='http://fonts.googleapis.com/css?family=Open+Sans +Condensed:700,300&subset=latin,latin-ext' rel='stylesheet' type='text/css'>"""
+    page += """<style type="text/css">"""
+    page += style_info
+    page += "</style>"
+    page += "</head><body>"
     page += performAnalysis()
     for c in clist:
         print("Renderin' %s" % c)
